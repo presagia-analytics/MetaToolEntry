@@ -7,17 +7,15 @@ library(rhandsontable)
 library(dplyr)
 library(rmarkdown)
 library(shinyFeedback)
+library(here)
 
-source('module_ttf.R')
-source('module_num.R')
-source('module_cat.R')
-source('module_helper.R')
-source('module_summary.R')
-source('module_metaanalysisBin.R')
 
-source('module_metaanalysis.R')
-source('module_metaanalysisCont.R')
-source("R/functions_helper.R")
+source(file.path(here::here(), "module/module_ttf.R"), encoding = 'UTF-8')
+source(file.path(here::here(), "module/module_num.R"), encoding = 'UTF-8')
+source(file.path(here::here(), "module/module_cat.R"), encoding = 'UTF-8')
+source(file.path(here::here(), "module/module_summary.R"), encoding = 'UTF-8')
+source(file.path(here::here(), "utils/functions_helper.R"), encoding = 'UTF-8')
+
 ui <-navbarPage("MetaTool",
                 collapsible = TRUE,
                 inverse = FALSE,
@@ -80,16 +78,7 @@ ui <-navbarPage("MetaTool",
                          )
                 ),
                 tabPanel("Study Summary",
-                         ui_summary ("ss")),
-
-                tabPanel("Meta-Analysis-Survival",
-                         ui_metaanalysis("MetaAna")),
-
-                tabPanel("Meta-Analysis-Binary",
-                         ui_metaanalysisBin("MetaAnaBinary")),
-
-                tabPanel("Meta-Analysis-Continuous",
-                         ui_metaanalysisCont("MetaAnaContinuous"))
+                         ui_summary ("ss"))
 
 )
 
@@ -143,9 +132,6 @@ server <- function(input, output,session) {
 
   # Data Selection####
   server_summary("ss",values)
-  server_metaanalysis("MetaAna", metaData)
-  server_metaanalysisBin("MetaAnaBinary", metaData)
-  server_metaanalysisCont("MetaAnaContinuous", metaData)
 
   # Mata Analysis ####
   #server_metaanalysis("MetaAna", metaData, values[['Sel_Table']])
