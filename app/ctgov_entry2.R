@@ -1,5 +1,3 @@
-# noted that the MetaTool module is required to run this app.
-
 library(shiny)
 library(DT)
 library(rhandsontable)
@@ -14,7 +12,6 @@ source(file.path(here::here(), "utils/functions_helper.R"), encoding = 'UTF-8')
 source("C:/Users/Preadmin/OneDrive - Telperian/Github/ctrialsgovshiny/metatool-utils/trial-input.r")
 source("C:/Users/Preadmin/OneDrive - Telperian/Github/ctrialsgovshiny/metatool-utils/rawchar.r")
 
-
 shinyInput <- function(FUN, len, id, ...) {
   inputs <- character(len)
   for (i in seq_len(len)) {
@@ -27,90 +24,55 @@ test_input$outcome <- ""
 test_input$Action <- shinyInput(actionButton, nrow(test_input), 'button_', label = "Add Outcome", onclick = 'Shiny.onInputChange(\"select_button\",  this.id)' )
 
 
+ui <- navbarPage('MetaTool Entry',
+                 id = "inTabset",
+                 collapsible = TRUE,
+                 inverse = FALSE,
+                 theme = shinythemes::shinytheme("yeti"),
+                 tabPanel(title = "Panel 1", value = "panel1", 
+                          DT::dataTableOutput("data")),
+                          #actionButton('jumpToP2', 'Jump to Second Tab')),
+                 tabPanel(title = "Panel 2", value = "panel2", 
+                          h5(strong("You are entering the outcome for trial:")), 
+                          textOutput('myText'),
+                          actionButton('jumpToP1', 'Jump to First Tab'))
+)
 
-ui <- fluidPage(
-    fluidRow(
-      column(
-        6,
-        DT::dataTableOutput("data")
-        )
-      ,
-      column(
-        5,
-        h5(strong("You are entering the outcome for trial:")), 
-        textOutput('myText'),
-        hr(),
-        # h5(strong("Pick a outcome:")),
-        # 
-        #   actionButton("OS", "OS"),
-        #   actionButton("PFS", "PFS"),
-        #   actionButton("RECIST", "RECIST"),
-        # 
-        # hr(),
-        h5(strong("Entry the outcome:")),
-        tabsetPanel(
-          id = "outcome_tabs",
-          type = "tabs",
-          tabPanel("OS",
-                   ui_ttf("os")
-          ),
-          tabPanel("PFS",
-                   ui_ttf("pfs")
-          ),
-          tabPanel("RECIST",
-                   ui_cat ("RECIST")
-          )
-        )
-        ,
-        style = 'border-left: 1px solid'
-      )
-    ))
-
-
-server <- function(input, output) {
+server <- function(input, output, session) {
   
   myValue <- reactiveValues(employee = '')
   values <- reactiveValues()
-  
-  shinyInput <- function(FUN, len, id, ...) {
-    inputs <- character(len)
-    for (i in seq_len(len)) {
-      inputs[i] <- as.character(FUN(paste0(id, i), ...))
-    }
-    inputs
-  }
-  
   
   output$data <- DT::renderDataTable(
     test_input, server = FALSE, escape = FALSE, selection = 'none'
   )
   
+  
   observeEvent(input$select_button, {
     selectedRow <- as.numeric(strsplit(input$select_button, "_")[[1]][2])
     myValue$employee <<- paste('',test_input[selectedRow,1])
+    updateTabsetPanel(session, "inTabset",
+                      selected = "panel2")
   })
   
-  # output$myText <- renderText({
-  #   myValue$employee
-  # })
-  # 
-  # 
-  # observeEvent(input$runif, {
-  #   v$data <- runif(100)
-  # })
   
-  server_ttf(id = "os", values)
-  server_ttf(id = "pfs",values)
-  server_cat("RECIST",values)
+  observeEvent(input$jumpToP2, {
+    updateTabsetPanel(session, "inTabset",
+                      selected = "panel2")
+  })
+  
+  observeEvent(input$jumpToP1, {
+    updateTabsetPanel(session, "inTabset",
+                      selected = "panel1")
+  })
+  
   
   output$myText <- renderText({
     
     myValue$employee
     
   })
-
   
 }
 
-shinyApp(ui = ui, server = server)
-# runApp(list(ui = ui, server = server), host = "0.0.0.0", port = 80)
+shinyApp(ui, server)

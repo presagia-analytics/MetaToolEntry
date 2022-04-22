@@ -89,27 +89,18 @@ server_ttf <- function(id, app_values) {
       })
 
       observeEvent(input$save_table,{
-        browser()
-        
           tmp_df <- isolate(ttf_values[[ns("ttf_table")]])
-          
-          
-          
-          
-          
           if(!is.null(input$excel_input)){
             tmp_df <- tmp_df %>%
             add_km(input$excel_input, input$unit_time) %>%
             update_median()
-            ttf_values[[ns('ttf_table')]]  <- tmp_df[-which(colnames(tmp_df)%in% c("km_data"))]
+            #ttf_values[[ns('ttf_table')]]  <- tmp_df[-which(colnames(tmp_df)%in% c("km_data"))]
             }
 
           ttf_values[[ns('final_data')]] <- tmp_df
 
-
           all_outcome <- isolate(app_values[['all_outcome']])
           app_values[['all_outcome']] <- merge_outcome(all_outcome,tmp_df, ns)
-
 
           gargoyle::trigger("make_plot")
       })
