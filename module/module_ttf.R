@@ -89,7 +89,14 @@ server_ttf <- function(id, app_values) {
       })
 
       observeEvent(input$save_table,{
+        browser()
+        
           tmp_df <- isolate(ttf_values[[ns("ttf_table")]])
+          
+          
+          
+          
+          
           if(!is.null(input$excel_input)){
             tmp_df <- tmp_df %>%
             add_km(input$excel_input, input$unit_time) %>%
@@ -223,31 +230,32 @@ server_ttf <- function(id, app_values) {
 }
 
 
-#library(shiny)
-#library(rhandsontable)
-#library(ggplot2)
-#source("R/functions_helper.R")
-#options("gargoyle.talkative" = TRUE)
-#
-#ui <- fluidPage(
-#  ui_ttf("ttf1"),
-#  hr(),
-#  textOutput("text"),
-#  dataTableOutput('table')
-#)
-#
-#server <- function(input, output) {
-#  values <- reactiveValues()
-#  df <- read.csv("ssss.csv")
-#  values[['summary_table']] <- df
-#  server_ttf("ttf1",values)
-#  output$text <- renderText({
-#    paste0(names(values),sep = "  //")
-#    })
-#  output$table <- renderDataTable(
-#    #browser()
-#    values[["all_outcome"]]
-#    )
-#}
-#
-#shinyApp(ui, server)
+library(shiny)
+library(rhandsontable)
+library(ggplot2)
+source(file.path(here::here(), "utils/functions_helper.R"), encoding = 'UTF-8')
+
+options("gargoyle.talkative" = TRUE)
+
+ui <- fluidPage(
+ ui_ttf("ttf1"),
+ hr(),
+ textOutput("text"),
+ dataTableOutput('table')
+)
+
+server <- function(input, output) {
+ values <- reactiveValues()
+ df <- read.csv(file.path(here::here(),"FirstDataSource.csv"))
+ values[['summary_table']] <- df
+ server_ttf("ttf1",values)
+ output$text <- renderText({
+   paste0(names(values),sep = "  //")
+   })
+ output$table <- renderDataTable(
+   #browser()
+   values[["all_outcome"]]
+   )
+}
+
+shinyApp(ui, server)

@@ -15,6 +15,9 @@ source(file.path(here::here(), "module/module_num.R"), encoding = 'UTF-8')
 source(file.path(here::here(), "module/module_cat.R"), encoding = 'UTF-8')
 source(file.path(here::here(), "module/module_summary.R"), encoding = 'UTF-8')
 source(file.path(here::here(), "utils/functions_helper.R"), encoding = 'UTF-8')
+source("C:/Users/Preadmin/OneDrive - Telperian/Github/ctrialsgovshiny/metatool-utils/trial-input.r")
+source("C:/Users/Preadmin/OneDrive - Telperian/Github/ctrialsgovshiny/metatool-utils/rawchar.r")
+
 
 ui <-navbarPage("MetaTool",
                 collapsible = TRUE,
@@ -111,22 +114,6 @@ server <- function(input, output,session) {
 
     ddf<-as.data.frame(lapply(ddf, as.character))
     values[['summary_table']] <- ddf
-
-
-
-    ### Folder ####
-
-    if(!dir.exists("extractedData")){
-      dir.create("extractedData")
-    }
-
-    if(!dir.exists("kmFigures")){
-      dir.create("kmFigures")
-    }
-
-    if(!dir.exists("paper")){
-      dir.create("paper")
-    }
 
   })
 

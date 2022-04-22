@@ -8,11 +8,13 @@ create_ttf_table <- function(num_arm){
                    Subgroup = "",
                    N  = "",
                    No.Event = "",
-                   Est.Median.month = "",
-                   EM.95CI.month = "",
-                   Fup.Median.month = "",
+                   Est.Median = "",
+                   EM.95CIL = "",
+                   EM.95CIU = "",
+                   Fup.Median = "",
                    HR = "",
-                   HR.95CI = "",
+                   HR.95CIL = "",
+                   HR.95CIU = "",
                    KM.Excel.Name = "",
                    stringsAsFactors=FALSE)
   df
@@ -105,7 +107,7 @@ table2survplot <- function(ttf_table, excel_input){
     if(use_km_data(excel_input, ttf_table$KM.Excel.Name)){
       colnames(ttf_table)[ncol(ttf_table)] <- "km_data"
       try(make_survplot(make_df_kmdata(ttf_table)))
-    }else if(use_median(excel_input, ttf_table$KM.Excel.Name, ttf_table$Est.Median.month)){
+    }else if(use_median(excel_input, ttf_table$KM.Excel.Name, ttf_table$Est.Median)){
       make_survplot(make_df_median(ttf_table))
     }
   }
@@ -122,7 +124,7 @@ use_median <- function(excel_input,excel_name, ttf_median){
 }
 
 make_df_median <- function(ttf_table){
-  exponential_rates = log(2)/as.numeric(ttf_table$Est.Median.month[ttf_table$Est.Median.month != ""])
+  exponential_rates = log(2)/as.numeric(ttf_table$Est.Median[ttf_table$Est.Median != ""])
   time <- seq(from = 0, to = 45, by = 0.1)
   dff = NULL
   for (ii in seq(1,length(exponential_rates))){
@@ -184,9 +186,9 @@ update_median <- function(ttf_table){
   if(!is.null(ttf_table)){
     ttf_table %>%
       dplyr::rowwise() %>%
-      dplyr::mutate(Est.Median.month = ifelse(KM.Excel.Name != "" & Est.Median.month == "",
+      dplyr::mutate(Est.Median = ifelse(KM.Excel.Name != "" & Est.Median == "",
                                               get_ttf_median(km_data),
-                                              Est.Median.month
+                                              Est.Median
       ))}}
 
 get_ttf_median<- function(km_data){
@@ -289,7 +291,7 @@ add_ipd <- function(final_data ,risk_table, unit_time){
 
   seq_median_id <- which(sapply(final_data$ipd,is.null))
   final_data$ipd[seq_median_id]  = lapply(seq_median_id, function(x) {
-    get_ipd_median(final_data[x,]$Est.Median.month, final_data[x,]$No.Event, final_data[x,]$N, arm.id= final_data[x,]$Treatment, subgroup.id = final_data[x,]$Subgroup)
+    get_ipd_median(final_data[x,]$Est.Median, final_data[x,]$No.Event, final_data[x,]$N, arm.id= final_data[x,]$Treatment, subgroup.id = final_data[x,]$Subgroup)
   })
   final_data
 }

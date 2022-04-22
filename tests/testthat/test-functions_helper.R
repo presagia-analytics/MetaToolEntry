@@ -1,14 +1,14 @@
-source("C:/Users/Preadmin/OneDrive - Telperian/Github/MetaToolApp/R/functions_helper.R")
+source(file.path(here::here(), "utils/functions_helper.R"), encoding = 'UTF-8')
 library(testthat)
 library(shiny)
 library(ggplot2)
 
-SourceData <- readRDS("C:/Users/Preadmin/OneDrive - Telperian/Github/MetaToolApp/raw-data/Source.RDS")
+SourceData <- readRDS("C:/Users/Preadmin/OneDrive - Telperian/Github/MetaToolApp/raw-data/FirstDataSource.RDS")
 ns <- NS("example")
 
 test_that("test create table", {
   test_ttf <- create_ttf_table(6)
-  expect_equal(dim(test_ttf),c(6, 11))
+  expect_equal(dim(test_ttf),c(6, 13))
 
   test_cat <- create_cat_table(6)
   expect_equal(dim(test_cat),c(6, 4))
@@ -30,19 +30,20 @@ dft$Est.Median.month <- c("5.99","11.15", "9.14")
 dft$Fup.Median.month <- c("24", "24", "13")
 dft$KM.Excel.Name <- c("NSCLC01642004_docetaxel.csv","NSCLC01642004_nivolumab.csv","NSCLC01673867_docetaxel.csv")
 
-test_that("make_final_table", {
-  test_c <- make_final_table(dfc,ns)
-  expect_identical(colnames(test_c),c( "ID","Treatment", "Subgroup","example-N"))
-
-  test_n <- make_final_table(dfn,ns)
-  expect_identical(colnames(test_n),c( "ID","Treatment", "Subgroup","example-N",
-                                       "example-Mean","example-Sd", "example-Median", "example-Range"))
-  test_t <- make_final_table(dft,ns)
-  expect_identical(colnames(test_t),c( "ID","Treatment", "Subgroup","example-N",
-                                       "example-No.Event","example-Est.Median.month", "example-EM.95CI.month",
-                                       "example-Fup.Median.month", "example-HR", "example-HR.95CI","example-KM.Excel.Name"))
-
-})
+# test_that("make_final_table", {
+#   # this function will not be used for databd
+#   test_c <- make_final_table(dfc,ns)
+#   expect_identical(colnames(test_c),c( "ID","Treatment", "Subgroup","example-N"))
+# 
+#   test_n <- make_final_table(dfn,ns)
+#   expect_identical(colnames(test_n),c( "ID","Treatment", "Subgroup","example-N",
+#                                        "example-Mean","example-Sd", "example-Median", "example-Range"))
+#   test_t <- make_final_table(dft,ns)
+#   expect_identical(colnames(test_t),c( "ID","Treatment", "Subgroup","example-N",
+#                                        "example-No.Event","example-Est.Median.month", "example-EM.95CI.month",
+#                                        "example-Fup.Median.month", "example-HR", "example-HR.95CI","example-KM.Excel.Name"))
+# 
+# })
 
 test_that("adjust_row", {
   expect_equal(nrow(adjust_row(dfc,6)),6)
