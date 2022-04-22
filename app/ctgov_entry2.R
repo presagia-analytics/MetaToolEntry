@@ -36,44 +36,29 @@ ui <- navbarPage('MetaTool Entry',
    
                           
                           fluidPage(
-                            #tags$style(type="text/css",".shiny-output-error { visibility: hidden; }",".shiny-output-error:before { visibility: hidden; }"),
-                            #tags$style(type="text/css","#search { top: 50% !important;left: 50% !important;margin-top: -100px !important;margin-left: -250px
-                            #!important; color: blue;font-size: 20px;font-style: italic;}"),
                             sidebarLayout(
                               sidebarPanel(
                                 tags$style(type='text/css', " { height:30px }"),
                                 width = 3,
-                                h5(strong("You are entering the outcome for trial:")), 
-                                textOutput('myText'),
-                                actionButton('jumpToP1', 'Save All'),
+                                h5(strong("NCT number:")), 
+                                #textOutput('sel_nct'),
+                                verbatimTextOutput('sel_nct'),
                                 fileInput('pdf_input', h5(strong('Upload Pdf')), accept = c('.pdf')),
-                                h5(strong("Add a New Outcome")),
-                                shinysky::select2Input("outcome_name",label = h6(strong("Name (required):")),choices=c("resp"),selected=c(""),
-                                                       multiple = FALSE,  size = 26),
-                                h6(strong("Type:")),
-                                fluidRow(
-                                  column(12,
-                                         actionButton("addTTF", "TTF"),
-                                         actionButton("addNum", "Numeric"),
-                                         actionButton("addCat", "Categorical"))),
-                                br(),
-                                textInput("PID", label = h5(strong("PID")), value = " "),
-                                textInput("PaperNickName", label = h5(strong("Paper NickName")), value = " "),
                                 shinysky::select2Input("Type",label = h5(strong("Cancer Type")),choices=c("Bladder"),selected=c("")),
                                 shinysky::select2Input("Phase",label = h5(strong("Phase")),choices=c("1","2","3","4","Unknown"),selected=c("")),
                                 shinysky::select2Input("TrLine",label = h5(strong("Therapy Lines")),choices=c("1","2","3","4"),selected=c("")),
-                                textInput("NCT", label = h5(strong("NCT number")), value = " "),
                                 textInput("Year", label = h5(strong("Year")), value = " "),
-                                textInput("FirstAuthor", label = h5(strong("First Author")), value = " "),
+                                textInput("FirstAuthor", label = h5(strong("Author First Name")), value = " "),
+                                textInput("LastAuthor", label = h5(strong("Author Last Name")), value = " "),
                                 hr(),
-                                actionButton("save_rds", "Save Results")
+                                actionButton("jumpToP1", "Save Results")
                               ),
                               # Create a spot for the barplot
                               mainPanel(
                                 width = 9,
                                 
                                 h4(strong("Paper Title:")),
-                                verbatimTextOutput("TitleName"),
+                                verbatimTextOutput("sel_paper_name"),
                                 hr(),
                                 tabsetPanel(
                                   id = "outcome_tabs",
@@ -114,7 +99,8 @@ server <- function(input, output, session) {
   
   observeEvent(input$select_button, {
     selectedRow <- as.numeric(strsplit(input$select_button, "_")[[1]][2])
-    myValue$employee <<- paste('',test_input[selectedRow,1])
+    myValue$nct <<- paste('',test_input[selectedRow,1])
+    myValue$paper_name <<- paste('',test_input[selectedRow,2])
     updateTabsetPanel(session, "inTabset",
                       selected = "panel2")
   })
@@ -122,16 +108,25 @@ server <- function(input, output, session) {
   
   
   #### Tab2
+  server_ttf(id = "os", values)
+  server_ttf(id = "pfs",values)
+  server_cat("RECIST",values)
+
 
   
-  observeEvent(input$jumpToP1, {
-    updateTabsetPanel(session, "inTabset",
-                      selected = "panel1")
+  output$sel_nct <- renderText({
+    myValue$nct
+  })
+  
+  output$sel_paper_name <- renderText({
+    myValue$paper_name
   })
   
   
-  output$myText <- renderText({
-    myValue$employee
+  #### Save and back to first Tab
+  observeEvent(input$jumpToP1, {
+    updateTabsetPanel(session, "inTabset",
+                      selected = "panel1")
   })
   
   
