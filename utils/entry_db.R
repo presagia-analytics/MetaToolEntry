@@ -42,4 +42,22 @@ make_surv_outcome <- function(ttf_table,outcome_name, unit_time,fig_path = NULL)
   
 }
 
+make_doce_pub <- function(input_info){
+  pdf_article <- NA
+  if(!is.null(input_info$pdf_input)){
+    pdf_path <- input_info$pdf_input$datapath
+    pdf_article <- read_rawchar_doc(pdf_path)
+  }
+  pub <- 
+    publication(
+      article = pdf_article,
+      doi = "asdfasd1234",  # unknown
+      year = input_info$Year,
+      first_name = input_info$FirstAuthor,
+      last_name = input_info$LastAuthor
+    )
+  pub
+}
+
+
 

@@ -7,6 +7,7 @@ library(ggplot2)
 test_input_org <- readRDS("C:/Users/Preadmin/OneDrive - Telperian/Github/ctrialsgovshiny/data/test_input.RDS")
 show_col <- c('nct_id', 'official_title')
 test_input <- test_input_org[,show_col]
+
 source(file.path(here::here(), "module/module_ttf.R"), encoding = 'UTF-8')
 source(file.path(here::here(), "module/module_num.R"), encoding = 'UTF-8')
 source(file.path(here::here(), "module/module_cat.R"), encoding = 'UTF-8')
@@ -24,7 +25,7 @@ shinyInput <- function(FUN, len, id, ...) {
 
 test_input$outcome <- ""
 test_input$Action <- shinyInput(actionButton, nrow(test_input), 'button_', label = "Add Outcome", onclick = 'Shiny.onInputChange(\"select_button\",  this.id)' )
-reload_module <- FALSE
+colnames(test_input) <- c("NCT","Title","Outcome","Action")
 
 ui <- navbarPage('MetaTool Entry',
                  id = "inTabset",
@@ -135,15 +136,8 @@ server <- function(input, output, session) {
     input_info <- reactiveValuesToList(input)
     
     #outcome_names_all <- stringr::str_remove(colnames(combined_df)[grepl('\\b.N\\b',colnames(combined_df))], ".N")
-    pub <- 
-      publication(
-        article = 
-          read_rawchar_doc("nivo-doce-example/1_Nivolumab versus Docetaxel.pdf"),
-        doi = "asdfasd1234",
-        year = 2022,
-        first_name = "some",
-        last_name = "dude"
-      )
+    
+
     
     #for each row in the datasets. 
     
@@ -152,11 +146,11 @@ server <- function(input, output, session) {
     write_trial(single_trial, trial_con())
    
     
-    test_trial <- trial("NCT1234", disease = "None", line = "First", 
-                        outcome = list(doce_surv_outcome, doce_cat_outcome,
-                                       doce_con_outcome),
-                        publication = pub,
-                        nickname = "test trial")
+    # test_trial <- trial("NCT1234", disease = "None", line = "First", 
+    #                     outcome = list(doce_surv_outcome, doce_cat_outcome,
+    #                                    doce_con_outcome),
+    #                     publication = pub,
+    #                     nickname = "test trial")
   
 
     
