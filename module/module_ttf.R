@@ -61,17 +61,7 @@ server_ttf <- function(id, app_values) {
       ns <- NS(id)
       
       ttf_values <- reactiveValues()
-      observe({
-        watch("render_result")
-        print("dddd")
-        ttf_values <- reactiveValues()
-      })
-      # if(!reload_module){
-      #   ttf_values <- reactiveValues()
-      #   reload_module = FALSE
-      # }
-    
-
+      
       gargoyle::init("make_plot", "make_ipd")
 
       ## PDF figure
@@ -100,8 +90,6 @@ server_ttf <- function(id, app_values) {
       })
 
       observeEvent(input$save_table,{
-        
-        browser()
           tmp_df <- isolate(ttf_values[[ns("ttf_table")]])
           if(!is.null(input$excel_input)){
             tmp_df <- tmp_df %>%

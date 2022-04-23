@@ -2,6 +2,7 @@ library(shiny)
 library(DT)
 library(rhandsontable)
 library(gargoyle)
+library(ggplot2)
 
 test_input_org <- readRDS("C:/Users/Preadmin/OneDrive - Telperian/Github/ctrialsgovshiny/data/test_input.RDS")
 show_col <- c('nct_id', 'official_title')
@@ -98,7 +99,6 @@ server <- function(input, output, session) {
     selection = 'none',
     options = list(bPaginate = FALSE, searching = FALSE, info = FALSE)
   )
-  init("render_result", "render_result2")
   
   observeEvent(input$select_button, {
     selectedRow <- as.numeric(strsplit(input$select_button, "_")[[1]][2])
@@ -107,7 +107,6 @@ server <- function(input, output, session) {
     reload_module <- TRUE
     shinyjs::reset("entry_tab")
     shinyjs::reset("Type")
-    trigger("render_result")
     updateTabsetPanel(session, "inTabset",
                       selected = "panel2")
   })
