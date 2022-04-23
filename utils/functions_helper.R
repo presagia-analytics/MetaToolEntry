@@ -103,7 +103,6 @@ adjust_col <- function(dtable,cat_level_name){
 table2survplot <- function(ttf_table, excel_input){
 
   if(!is.null(ttf_table)){
-    browser()
     if(use_km_data(excel_input, ttf_table$KM.Excel.Name)){
       try(make_survplot(make_df_kmdata(ttf_table)))
     }else if(use_median(excel_input, ttf_table$KM.Excel.Name, ttf_table$Est.Median)){

@@ -91,17 +91,19 @@ server_ttf <- function(id, app_values) {
 
       observeEvent(input$save_table,{
           tmp_df <- isolate(ttf_values[[ns("ttf_table")]])
+          rhandtable <- tmp_df
           if(!is.null(input$excel_input)){
             tmp_df <- tmp_df %>%
             add_km(input$excel_input, input$unit_time) %>%
             update_median()
-            #ttf_values[[ns('ttf_table')]]  <- tmp_df[-which(colnames(tmp_df)%in% c("km_data"))]
+            rhandtable  <- tmp_df[-which(colnames(tmp_df)%in% c("km_data"))]
           }
           if(!is.null(input$img_input)){
             tmp_df$fig_path <- input$img_input$datapath
           }
           
           ttf_values[[ns('final_data')]] <- tmp_df
+          ttf_values[[ns('ttf_table')]]  <- rhandtable
 
           all_outcome <- isolate(app_values[['all_outcome']])
           app_values[['all_outcome']] <- merge_outcome(all_outcome,tmp_df, ns)
