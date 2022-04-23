@@ -1,6 +1,7 @@
 library(shiny)
 library(DT)
 library(rhandsontable)
+library(gargoyle)
 
 test_input_org <- readRDS("C:/Users/Preadmin/OneDrive - Telperian/Github/ctrialsgovshiny/data/test_input.RDS")
 show_col <- c('nct_id', 'official_title')
@@ -22,7 +23,7 @@ shinyInput <- function(FUN, len, id, ...) {
 
 test_input$outcome <- ""
 test_input$Action <- shinyInput(actionButton, nrow(test_input), 'button_', label = "Add Outcome", onclick = 'Shiny.onInputChange(\"select_button\",  this.id)' )
-
+reload_module <- FALSE
 
 ui <- navbarPage('MetaTool Entry',
                  id = "inTabset",
@@ -33,9 +34,10 @@ ui <- navbarPage('MetaTool Entry',
                           DT::dataTableOutput("data")),
                  #actionButton('jumpToP2', 'Jump to Second Tab')),
                  tabPanel(title = "Outcome Entry", value = "panel2", 
-   
-                          
                           fluidPage(
+                            shinyjs::useShinyjs(),
+                            div(
+                              id = "entry_tab",
                             sidebarLayout(
                               sidebarPanel(
                                 tags$style(type='text/css', " { height:30px }"),
@@ -75,7 +77,7 @@ ui <- navbarPage('MetaTool Entry',
                                 )
                               )
                             )
-                          )
+                          ))
                           
                           
                           
@@ -84,8 +86,9 @@ ui <- navbarPage('MetaTool Entry',
 
 server <- function(input, output, session) {
   
-  myValue <- reactiveValues(employee = '')
-  values <- reactiveValues()
+  trial_value <- reactiveValues(employee = '')
+  entry_value <- reactiveValues()
+
   
   #### Tab1
   output$data <- DT::renderDataTable(
@@ -95,12 +98,16 @@ server <- function(input, output, session) {
     selection = 'none',
     options = list(bPaginate = FALSE, searching = FALSE, info = FALSE)
   )
-  
+  init("render_result", "render_result2")
   
   observeEvent(input$select_button, {
     selectedRow <- as.numeric(strsplit(input$select_button, "_")[[1]][2])
-    myValue$nct <<- paste('',test_input[selectedRow,1])
-    myValue$paper_name <<- paste('',test_input[selectedRow,2])
+    trial_value$nct <<- paste('',test_input[selectedRow,1])
+    trial_value$paper_name <<- paste('',test_input[selectedRow,2])
+    reload_module <- TRUE
+    shinyjs::reset("entry_tab")
+    shinyjs::reset("Type")
+    trigger("render_result")
     updateTabsetPanel(session, "inTabset",
                       selected = "panel2")
   })
@@ -108,23 +115,53 @@ server <- function(input, output, session) {
   
   
   #### Tab2
-  server_ttf(id = "os", values)
-  server_ttf(id = "pfs",values)
-  server_cat("RECIST",values)
 
-
+  server_ttf(id = "os", entry_value)
+  server_ttf(id = "pfs",entry_value)
+  server_cat("RECIST",entry_value)
   
   output$sel_nct <- renderText({
-    myValue$nct
+    trial_value$nct
   })
   
   output$sel_paper_name <- renderText({
-    myValue$paper_name
+    trial_value$paper_name
   })
   
   
   #### Save and back to first Tab
   observeEvent(input$jumpToP1, {
+    browser()
+    combined_df <- isolate(entry_value[["all_outcome"]])
+    input_info <- reactiveValuesToList(input)
+    
+    #outcome_names_all <- stringr::str_remove(colnames(combined_df)[grepl('\\b.N\\b',colnames(combined_df))], ".N")
+    pub <- 
+      publication(
+        article = 
+          read_rawchar_doc("nivo-doce-example/1_Nivolumab versus Docetaxel.pdf"),
+        doi = "asdfasd1234",
+        year = 2022,
+        first_name = "some",
+        last_name = "dude"
+      )
+    
+    #for each row in the datasets. 
+    
+    doce_outcome_list <- make_doce_outcome(combined_df_row,input_info)
+    single_trial <- make_trial(input,doce_outcome_list,pub)
+    write_trial(single_trial, trial_con())
+   
+    
+    test_trial <- trial("NCT1234", disease = "None", line = "First", 
+                        outcome = list(doce_surv_outcome, doce_cat_outcome,
+                                       doce_con_outcome),
+                        publication = pub,
+                        nickname = "test trial")
+  
+
+    
+    
     updateTabsetPanel(session, "inTabset",
                       selected = "panel1")
   })
