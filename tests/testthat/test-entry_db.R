@@ -8,6 +8,10 @@ ttf_table <- readRDS(file.path(here::here(),"/tests_data/ttf_table.RDS"))
 input_info <- readRDS(file.path(here::here(),"/tests_data/input_info.RDS"))
 input_info$pdf_input$datapath <- file.path(here::here(),"/example/1_Nivolumab versus Docetaxel.pdf")
 
+combined_df <- readRDS(file.path(here::here(),"/tests_data/combined_df.RDS"))
+combined_df$`os-fig_path` <- file.path(here::here(),"example/1_os.PNG")
+
+
 test_that("make_surv_outcome", {
   doce_surv_outcome <- make_surv_outcome(ttf_table[1,],"os","month",fig_path)
   expect_equal(dim(doce_surv_outcome),c(1, 16))
@@ -26,4 +30,6 @@ test_that("make_doce_pub",{
 })
 
 
+outcome_list <- make_doce_outcome(combined_df[1,],input_info)
+make_trial(input_info,outcome_list,doce_pub,"nct111")
 

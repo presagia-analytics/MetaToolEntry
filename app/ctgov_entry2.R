@@ -134,26 +134,12 @@ server <- function(input, output, session) {
     browser()
     combined_df <- isolate(entry_value[["all_outcome"]])
     input_info <- reactiveValuesToList(input)
-    
-    #outcome_names_all <- stringr::str_remove(colnames(combined_df)[grepl('\\b.N\\b',colnames(combined_df))], ".N")
-    
-
-    
-    #for each row in the datasets. 
-    
-    doce_outcome_list <- make_doce_outcome(combined_df_row,input_info)
-    single_trial <- make_trial(input,doce_outcome_list,pub)
-    write_trial(single_trial, trial_con())
    
-    
-    # test_trial <- trial("NCT1234", disease = "None", line = "First", 
-    #                     outcome = list(doce_surv_outcome, doce_cat_outcome,
-    #                                    doce_con_outcome),
-    #                     publication = pub,
-    #                     nickname = "test trial")
-  
-
-    
+    for (row_id in seq(1:nrow(combined_df))){
+      doce_outcome_list <- make_doce_outcome(combined_df[row_id,],input_info)
+      single_trial <- make_trial(input,doce_outcome_list,pub,trial_value)
+      write_trial(single_trial, trial_con())
+    }
     
     updateTabsetPanel(session, "inTabset",
                       selected = "panel1")
