@@ -6,6 +6,7 @@ create_ttf_table <- function(num_arm){
   df <- data.frame(ID   = seq(1:num_arm),
                    Treatment = "",
                    Subgroup = "",
+                   Pathology = "",
                    N  = "",
                    No.Event = "",
                    Est.Median = "",
@@ -24,6 +25,7 @@ create_cat_table <- function(num_arm){
   dfc <- data.frame(ID   = seq(1:num_arm),
                     Treatment = "",
                     Subgroup = "",
+                    Pathology = "",
                     N = "",
                     stringsAsFactors=FALSE)
   dfc
@@ -33,6 +35,7 @@ create_num_table <- function(num_arm){
   dfn <- data.frame(ID   = seq(1:num_arm),
                     Treatment = "",
                     Subgroup = "",
+                    Pathology = "",
                     N = "",
                     Mean = '',
                     Sd = '',
@@ -44,7 +47,7 @@ create_num_table <- function(num_arm){
 
 make_final_table <- function(dat,ns){
   if(!is.null(dat)){
-  col_id = which(!colnames(dat) %in% c("Treatment","Subgroup","ID"))
+  col_id = which(!colnames(dat) %in% c("Treatment","Subgroup","Pathology","ID"))
   colnames(dat)[col_id] <- ns(colnames(dat)[col_id])
   dat
   }
@@ -67,10 +70,11 @@ adjust_row <- function(dtable,n_arms){
 }
 
 adjust_col <- function(dtable,cat_level_name){
+  #browser()
   if (!is.na(cat_level_name)){
     current_names <- NULL
-    if(ncol(dtable) > 4){
-      current_names = colnames(dtable)[5:ncol(dtable)]
+    if(ncol(dtable) > 5){
+      current_names = colnames(dtable)[6:ncol(dtable)]
     }
 
     if(substr(cat_level_name, nchar(cat_level_name), nchar(cat_level_name)) %in% c(";", ",")){
@@ -210,7 +214,8 @@ make_risk_table <- function(img_input){
     colnames(risk_table) <- "Value (Separate numbers by blank space)"
     risk_table$Treatment <- ""
     risk_table$Subgroup <- ""
-    risk_table <- risk_table[c("Treatment","Subgroup","Value (Separate numbers by blank space)")]
+    risk_table$Pathology <- ""
+    risk_table <- risk_table[c("Treatment","Subgroup","Pathology","Value (Separate numbers by blank space)")]
     risk_table$Treatment[1] = "Time (in original unit)"
   }
   risk_table
@@ -270,19 +275,20 @@ clean_risktable_vector <- function(xv){
 }
 
 add_ipd <- function(final_data ,risk_table, unit_time){
+  #browser()
   colnames(final_data) <- c(colnames(create_ttf_table(1)),"km_data")
   final_data$ipd <- vector(mode = "list", length = nrow(final_data))
   if(!is.null(risk_table)){
     risk_table <- clean_risktable(risk_table)
     risk_time <- km_clean_month_vector(risk_table$value[1][[1]], unit_time)
     risk_table <- risk_table[2:nrow(risk_table),]
-    final_data <- dplyr::left_join(final_data, risk_table, by = c("Treatment", "Subgroup"))
+    final_data <- dplyr::left_join(final_data, risk_table, by = c("Treatment", "Subgroup","Pathology"))
 
     seq_id <- which(!sapply(final_data$value, is.null))
     #browser()
 
     final_data$ipd[seq_id] =  lapply(seq_id, function(x) {
-      get_ipd_risktable(risk_time, final_data[x,]$value[[1]], final_data[x,]$km_data[[1]], arm.id= final_data[x,]$Treatment, subgroup.id = final_data[x,]$Subgroup)
+      get_ipd_risktable(risk_time, final_data[x,]$value[[1]], final_data[x,]$km_data[[1]], arm.id= final_data[x,]$Treatment, subgroup.id = final_data[x,]$Subgroup, Pathology.id = final_data[x,]$Pathology)
     })
     final_data <- final_data[c(colnames(create_ttf_table(1)),"km_data","ipd")]
   }
@@ -294,7 +300,7 @@ add_ipd <- function(final_data ,risk_table, unit_time){
   final_data
 }
 
-get_ipd_median <- function(median_surv, num_event, num_patient, arm.id = 1, subgroup.id  = 1){
+get_ipd_median <- function(median_surv, num_event, num_patient, arm.id = 1, subgroup.id  = 1, Pathology.id = 1){
   median_surv <- as.numeric(median_surv)
   num_event <- as.numeric(num_event)
   num_patient <- as.numeric(num_patient)
@@ -310,7 +316,7 @@ get_ipd_median <- function(median_surv, num_event, num_patient, arm.id = 1, subg
   censtime  <- sort(endTime)[num_event]
   time      <- pmin(endTime, censtime) - enroll
   status    <- as.numeric(censtime >= endTime) # 0 censor 1 death
-  dfData   <- data.frame(time = time, status = status, arm = arm.id, subgroup = subgroup.id)
+  dfData   <- data.frame(time = time, status = status, arm = arm.id, subgroup = subgroup.id, Pathology = Pathology.id)
   return(dfData)
   }
   else{
@@ -318,10 +324,10 @@ get_ipd_median <- function(median_surv, num_event, num_patient, arm.id = 1, subg
   }
 }
 
-get_ipd_risktable <- function(risk_time, risk_number, km_data, arm.id = 1, subgroup.id  = 1){
+get_ipd_risktable <- function(risk_time, risk_number, km_data, arm.id = 1, subgroup.id  = 1, Pathology.id= 1){
   digizeit <- data.frame(k=1:nrow(km_data),Tk=km_data$time,Sk=km_data$surv)
   pub.risk <- riskdat(risk_time, risk_number,digizeit)
-  trial_arm <- guyot_ipd(digizeit,pub.risk,tot.events="NA", arm.id=arm.id, subgroup.id = subgroup.id)
+  trial_arm <- guyot_ipd(digizeit,pub.risk,tot.events="NA", arm.id=arm.id, subgroup.id = subgroup.id, Pathology = Pathology.id)
   trial_arm$IPD
 }
 
@@ -340,7 +346,7 @@ riskdat<-function(trisk,nrisk,digizeit){
   return(pub.risk)
 }
 
-guyot_ipd<-function(digizeit,pub.risk,tot.events="NA",arm.id=1, subgroup.id  = 1){
+guyot_ipd<-function(digizeit,pub.risk,tot.events="NA",arm.id=1, subgroup.id  = 1, Pathology.id = 1){
   #Read in survival times read by digizeit
   t.S<-digizeit$Tk
   S<-digizeit$Sk
@@ -355,6 +361,7 @@ guyot_ipd<-function(digizeit,pub.risk,tot.events="NA",arm.id=1, subgroup.id  = 1
   #Initialise vectors
   arm<-rep(arm.id,n.risk[1])
   subgroup <-rep(subgroup.id,n.risk[1])
+  Pathology <- rep(Pathology.id,n.risk[1])
   n.censor<- rep(0,(n.int-1))
   n.hat<-rep(n.risk[1]+1,n.t)
   cen<-rep(0,n.t)
@@ -512,7 +519,7 @@ guyot_ipd<-function(digizeit,pub.risk,tot.events="NA",arm.id=1, subgroup.id  = 1
     }
   }
   #Output IPD
-  IPD<-data.frame(time=t.IPD,status=event.IPD,arm=arm, subgroup = subgroup)
+  IPD<-data.frame(time=t.IPD,status=event.IPD,arm=arm, subgroup = subgroup, Pathology = Pathology)
   return(list(KMdata=KMdata,IPD=IPD))
 }
 
@@ -532,11 +539,11 @@ merge_outcome <- function(all_outcome, tab_df, ns){
   if(is.null(all_outcome)){
     tab_df
   }else{
-    col_replace = which(colnames(all_outcome) %in% colnames(tab_df[-c(1,2)]))
+    col_replace = which(colnames(all_outcome) %in% colnames(tab_df[-c(1,2,3)]))
     if(length(col_replace) > 0){
       all_outcome <- all_outcome[-col_replace]
     }
-    dplyr::full_join(all_outcome, tab_df, by =c("Treatment","Subgroup"))
+    dplyr::full_join(all_outcome, tab_df, by =c("Treatment","Subgroup","Pathology"))
 
   }
 }
@@ -545,15 +552,19 @@ make_trsub_list <- function(dt1, dt2){
   if(is.null(dt1)&is.null(dt2)){
     in_tr <- " "
     in_sub <- " "
+    in_path <- " "
   }else if(is.null(dt1)){
     in_tr<- dt2$Treatment
     in_sub <-  dt2$Subgroup
+    in_path <- dt2$Pathology
   }else if(is.null(dt2)){
     in_tr <- dt1$Treatment
     in_sub <-  dt1$Subgroup
+    in_path <- dt1$Pathology
   }else{
     in_tr <- union(dt1$Treatment, dt2$Treatment)
     in_sub <- union(dt1$Subgroup, dt2$Subgroup)
+    in_path <- union(dt1$Pathology, dt2$Pathology) 
   }
 
   if(length(unique(in_tr))<2){in_tr = c(" ",in_tr)}

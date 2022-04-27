@@ -46,9 +46,14 @@ ui_ttf <- function(id) {
     ),
     hr(),
     h4(strong("Patient Level Data")),
+    fluidRow(
+      column(
+        width = 6,
+        fileInput(ns("pid_input"),  h5(strong('Upload PID Data:')), accept = c('.csv'),multiple = TRUE))
+    ),
     h5(strong("Number at Risk Table:")),
     fluidRow(column(12,rHandsontableOutput(ns("risk_table")))),
-    fluidRow(column(12,verticalLayout(actionButton(ns("add_ipd"), "Get IPD data")))),
+    fluidRow(column(12,verticalLayout(actionButton(ns("add_ipd"), "Save IPD Data")))),
     h5(strong("IPD Table (Treatment combined):")),
     fluidRow(column(12,rHandsontableOutput(ns("ipd_table"))))
   )
@@ -187,7 +192,8 @@ server_ttf <- function(id, app_values) {
         out_table <- rhandsontable(risk_table ,useTypes = TRUE, selectCallback = TRUE, height = 250) %>%
           hot_table(highlightCol = TRUE, highlightRow = TRUE,  rowHeaderWidth = 0, stretchH = 'all') %>%
           hot_col("Treatment",type = "dropdown", source = sort(unique(ttf_table$Treatment))) %>%
-          hot_col("Subgroup",type = "dropdown", source = sort(unique(ttf_table$Subgroup)))
+          hot_col("Subgroup",type = "dropdown", source = sort(unique(ttf_table$Subgroup))) %>%
+          hot_col("Pathology",type = "dropdown", source = sort(unique(ttf_table$Pathology)))
 
         out_table
 
@@ -227,32 +233,32 @@ server_ttf <- function(id, app_values) {
 }
 
 
-# library(shiny)
-# library(rhandsontable)
-# library(ggplot2)
-# source(file.path(here::here(), "utils/functions_helper.R"), encoding = 'UTF-8')
-# 
-# options("gargoyle.talkative" = TRUE)
-# 
-# ui <- fluidPage(
-#  ui_ttf("ttf1"),
-#  hr(),
-#  textOutput("text"),
-#  dataTableOutput('table')
-# )
-# 
-# server <- function(input, output) {
-#  values <- reactiveValues()
-#  df <- read.csv(file.path(here::here(),"FirstDataSource.csv"))
-#  values[['summary_table']] <- df
-#  server_ttf("ttf1",values)
-#  output$text <- renderText({
-#    paste0(names(values),sep = "  //")
-#    })
-#  output$table <- renderDataTable(
-#    #browser()
-#    values[["all_outcome"]]
-#    )
-# }
-# 
-# shinyApp(ui, server)
+library(shiny)
+library(rhandsontable)
+library(ggplot2)
+source(file.path(here::here(), "utils/functions_helper.R"), encoding = 'UTF-8')
+
+options("gargoyle.talkative" = TRUE)
+
+ui <- fluidPage(
+ ui_ttf("ttf1"),
+ hr(),
+ textOutput("text"),
+ dataTableOutput('table')
+)
+
+server <- function(input, output) {
+ values <- reactiveValues()
+ df <- read.csv(file.path(here::here(),"FirstDataSource.csv"))
+ values[['summary_table']] <- df
+ server_ttf("ttf1",values)
+ output$text <- renderText({
+   paste0(names(values),sep = "  //")
+   })
+ output$table <- renderDataTable(
+   #browser()
+   values[["all_outcome"]]
+   )
+}
+
+shinyApp(ui, server)

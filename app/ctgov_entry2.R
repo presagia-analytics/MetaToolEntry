@@ -138,7 +138,7 @@ server <- function(input, output, session) {
     for (row_id in seq(1:nrow(combined_df))){
       doce_outcome_list <- make_doce_outcome(combined_df[row_id,],input_info)
       single_trial <- make_trial(input,doce_outcome_list,pub,trial_value)
-      write_trial(single_trial, trial_con())
+      write_trial(single_trial, trial_con())0116
     }
     
     updateTabsetPanel(session, "inTabset",
