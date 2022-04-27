@@ -3,6 +3,7 @@ library(testthat)
 library(shiny)
 library(ggplot2)
 
+## test data 
 SourceData <- readRDS("C:/Users/Preadmin/OneDrive - Telperian/Github/MetaToolApp/raw-data/FirstDataSource.RDS")
 ns <- NS("example")
 
@@ -24,26 +25,49 @@ dft <- create_ttf_table(3)
 
 dft$Treatment <- c("Docetaxel","Nivolumab","Nivolumab")
 dft$Subgroup  <- c("squamous","squamous","non-squamous")
+dft$Pathology <- c("2","3","4")
 dft$N <- c("135", "137","250")
 dft$No.Event <- c("70","50","50")
 dft$Est.Median <- c("5.99","11.15", "9.14")
 dft$Fup.Median<- c("24", "24", "13")
 dft$KM.Excel.Name <- c("NSCLC01642004_docetaxel.csv","NSCLC01642004_nivolumab.csv","NSCLC01673867_docetaxel.csv")
 
-# test_that("make_final_table", {
-#   # this function will not be used for databd
-#   test_c <- make_final_table(dfc,ns)
-#   expect_identical(colnames(test_c),c( "ID","Treatment", "Subgroup","example-N"))
-# 
-#   test_n <- make_final_table(dfn,ns)
-#   expect_identical(colnames(test_n),c( "ID","Treatment", "Subgroup","example-N",
-#                                        "example-Mean","example-Sd", "example-Median", "example-Range"))
-#   test_t <- make_final_table(dft,ns)
-#   expect_identical(colnames(test_t),c( "ID","Treatment", "Subgroup","example-N",
-#                                        "example-No.Event","example-Est.Median.month", "example-EM.95CI.month",
-#                                        "example-Fup.Median.month", "example-HR", "example-HR.95CI","example-KM.Excel.Name"))
-# 
-# })
+km_input_files <- data.frame(name = c("NSCLC01642004_docetaxel.csv","NSCLC01642004_nivolumab.csv"),
+                             size = c("2619, 2573"),
+                             type = c("application/vnd.ms-excel","application/vnd.ms-excel"),
+                             datapath = c(file.path(here::here(), "example/NSCLC01642004_docetaxel.csv"),
+                                          file.path(here::here(), "example/NSCLC01642004_nivolumab.csv")))
+
+ipd_input_files <- data.frame(name = c("ipd_example1.csv","ipd_example2.csv"),
+                             size = c("2619, 2573"),
+                             type = c("text/csv","text/csv"),
+                             datapath = c(file.path(here::here(), "tests_data/ipd_example1.csv"),
+                                          file.path(here::here(), "tests_data/ipd_example2.csv")))
+
+
+risk_table <- tibble::tibble(
+  Treatment = c("Time (in original unit)","Docetaxel","Nivolumab"),
+  Subgroup  = c("","squamous","squamous"),
+  Pathology = c("","2","3"),
+  "Value (Separate numbers by blank space)" = c("0 3 6 9 12 15 18 21 24","135 113 86 69 52 31 15 7 0","137 103 68 45 30 14 7 2 0"),
+  Ipd.Name = c("","ipd_example1.csv","ipd_example2.csv")
+  )
+
+test_that("make_final_table", {
+  # this function will not be used for databd
+  test_c <- make_final_table(dfc,ns)
+  expect_identical(colnames(test_c),c( "ID","Treatment", "Subgroup","Pathology","example-N"))
+
+  test_n <- make_final_table(dfn,ns)
+  expect_identical(colnames(test_n),c( "ID","Treatment", "Subgroup","Pathology","example-N",
+                                       "example-Mean","example-Sd", "example-Median", "example-Range"))
+  test_t <- make_final_table(dft,ns)
+  expect_identical(colnames(test_t),c( "ID","Treatment", "Subgroup","Pathology","example-N",
+                                       "example-No.Event","example-Est.Median", "example-EM.95CIL", "example-EM.95CIU",
+                                       "example-Fup.Median", "example-HR", "example-HR.95CIL","example-HR.95CIU",
+                                       "example-KM.Excel.Name"))
+
+})
 
 test_that("adjust_row", {
   expect_equal(nrow(adjust_row(dfc,6)),6)
@@ -69,14 +93,6 @@ test_that("adjust_col", {
   expect_equal(colnames(adjust_col(dfc,"A B;C")),c( "ID","Treatment", "Subgroup", "Pathology","N","A B","C"))
   expect_equal(colnames(adjust_col(dfc,"A;;B;")),c( "ID","Treatment", "Subgroup", "Pathology","N","A","B"))
 })
-
-
-km_input_files <- data.frame(name = c("NSCLC01642004_docetaxel.csv","NSCLC01642004_nivolumab.csv"),
-                             size = c("2619, 2573"),
-                             type = c("application/vnd.ms-excel","application/vnd.ms-excel"),
-                             datapath = c("C:\\Users\\Preadmin\\OneDrive - Telperian\\MetaTool\\examples\\extractedData\\NSCLC01642004_docetaxel.csv",
-                                          "C:\\Users\\Preadmin\\OneDrive - Telperian\\MetaTool\\examples\\extractedData\\NSCLC01642004_nivolumab.csv"))
-
 
 test_that("Test KMplot from median", {
   dft_median <- make_df_median(dft)
@@ -180,27 +196,28 @@ test_that("get risk table from image",{
   expect_identical(test_df[[1]][1], c("time 0 3 6 9 12 15 18 21 24"))
 
   test_df <- make_risk_table(img_input)
-  expect_equal(dim(test_df),c(3,4))
+  expect_equal(dim(test_df),c(3,5))
 
   test_df <- make_risk_table(NULL)
-  expect_equal(dim(test_df),c(1,4))
+  expect_equal(dim(test_df),c(1,5))
   expect_identical(test_df$`Value (Separate numbers by blank space)`, c("Can't get the risk table"))
 
 })
 
-risk_table <- tibble::tibble(
-  Treatment = c("Time (in original unit)","Docetaxel","Nivolumab"),
-  Subgroup  = c("","squamous","squamous"),
-  Pathology = c("1","2","3"),
-  "Value (Separate numbers by blank space)" = c("0 3 6 9 12 15 18 21 24","135 113 86 69 52 31 15 7 0","137 103 68 45 30 14 7 2 0")
-)
-
 test_that("clean risk table",{
 
   risk_table_test <- clean_risktable(risk_table)
-  expect_equal(dim(risk_table_test),c(3,5))
+  expect_equal(dim(risk_table_test),c(3,6))
   expect_identical(class(risk_table_test$value), c("list"))
   expect_identical(class(risk_table_test$value[[1]]), c("numeric"))
+})
+
+test_that("test upload ipd",{
+  ipd_table <- add_ipd_upload(dft, risk_table,ipd_input_files)
+  expect_equal(dim(ipd_table),c(3,15))  #note, 15 is without km_data
+  expect_true(is.null(ipd_table$ipd[3][[1]]))
+  expect_false(is.null(ipd_table$ipd[2][[1]]))
+
 })
 
 test_that("calcaute ipd",{
@@ -221,12 +238,12 @@ test_that("calcaute ipd",{
 
   ## null risk table
 
-  ipd_table <- add_ipd(dft, risk_table,"month")
+  ipd_table <- add_ipd_risktable(dft, risk_table,"month")
   expect_equal(dim(ipd_table),c(3,16))
   expect_identical(class(ipd_table$ipd), c("list"))
   expect_false(all(sapply(ipd_table$ipd, is.null)))
 
-  ipd_table2 <- add_ipd(dft, NULL,"month")
+  ipd_table2 <- add_ipd_risktable(dft, NULL,"month")
   expect_equal(dim(ipd_table2),c(3,16))
   expect_identical(class(ipd_table2$ipd), c("list"))
   expect_false(all(sapply(ipd_table2$ipd, is.null)))
@@ -235,6 +252,10 @@ test_that("calcaute ipd",{
   p <-make_ipd_figure(ipd_plot_table)
   expect_error(print(p), NA)
 })
+
+
+
+
 
 test_that("merge outcome",{
   tab_df1 <- data.frame(ID = c(1,2,3),
@@ -292,8 +313,6 @@ test_that("treatment and subgroup dropdown",{
   expect_equal(length(test4[[1]]),1)
 
 })
-
-
 
 test_that("merge_trial_info",{
 

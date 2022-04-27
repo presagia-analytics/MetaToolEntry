@@ -196,7 +196,7 @@ server_ttf <- function(id, app_values) {
           hot_col("Treatment",type = "dropdown", source = sort(unique(ttf_table$Treatment))) %>%
           hot_col("Subgroup",type = "dropdown", source = sort(unique(ttf_table$Subgroup))) %>%
           hot_col("Pathology",type = "dropdown", source = sort(unique(ttf_table$Pathology))) %>%
-          hot_col("PID.Name",type = "dropdown", source = c("",input$pid_input$name) , strict = TRUE) 
+          hot_col("Ipd.Name",type = "dropdown", source = c("",input$pid_input$name) , strict = TRUE) 
 
         out_table
 
@@ -205,8 +205,9 @@ server_ttf <- function(id, app_values) {
       observeEvent(input$"add_ipd",{
         final_data <- isolate(ttf_values[[ns('final_data')]])
         risk_table <- isolate(ttf_values[[ns("risk_table")]])
+        browser()
 
-        final_data <- add_ipd(final_data, risk_table, input$unit_time)
+        final_data <- add_ipd(final_data, risk_table, input$pid_input, input$unit_time)
 
         ttf_values[[ns('final_data')]] <- make_final_table(final_data, ns)
         ttf_values[[ns('ipd_table')]] <- do.call(rbind,final_data$ipd)

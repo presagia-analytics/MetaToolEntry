@@ -218,7 +218,7 @@ make_risk_table <- function(img_input){
     risk_table <- risk_table[c("Treatment","Subgroup","Pathology","Value (Separate numbers by blank space)")]
     risk_table$Treatment[1] = "Time (in original unit)"
   }
-  risk_table$`PID.Name` <- ""
+  risk_table$Ipd.Name <- ""
   risk_table
 }
 
@@ -275,7 +275,30 @@ clean_risktable_vector <- function(xv){
   sep_xv[which(!is.na(sep_xv))]
 }
 
-add_ipd <- function(final_data ,risk_table, unit_time){
+add_ipd <- function(final_data, risk_table,ipd_input_files,unit_time = "month"){
+  if( any(risk_table$Ipd.Name != "")){
+    ipd_table <- add_ipd_upload(final_data, risk_table,ipd_input_files)
+  }else{
+    ipd_table <- add_ipd(final_data, risk_table, unit_time)
+  }
+  ipd_table
+}
+
+
+add_ipd_upload <- function(final_data, risk_table,ipd_input_files){
+  if(!is.null(ipd_input_files)){
+    excl <- ipd_input_files
+    excl$ipd = sapply(excl$datapath,function(x) list(read.csv(x)))
+    risk_table <- dplyr::left_join(risk_table, excl[c("name","ipd")], by = c("Ipd.Name" = "name"))
+    final_data <- dplyr::left_join(final_data,
+                                   risk_table[c("Treatment","Subgroup","Pathology","ipd")],
+                                   by = c("Treatment","Subgroup","Pathology"))
+    }
+  final_data
+  
+}
+
+add_ipd_risktable <- function(final_data ,risk_table, unit_time){
   #browser()
   colnames(final_data) <- c(colnames(create_ttf_table(1)),"km_data")
   final_data$ipd <- vector(mode = "list", length = nrow(final_data))
