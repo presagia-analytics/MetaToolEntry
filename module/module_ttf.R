@@ -153,7 +153,9 @@ server_ttf <- function(id, app_values) {
           hot_col(col = "ID", readOnly = TRUE) %>%
           hot_col("Treatment",type = "autocomplete", source = tr_sub_list$Treatment , strict = FALSE) %>%
           hot_col("Subgroup",type = "autocomplete", source = tr_sub_list$Subgroup , strict = FALSE) %>%
-          hot_col("KM.Excel.Name",type = "dropdown", source = c("",input$excel_input$name) , strict = TRUE)
+          hot_col("KM.Excel.Name",type = "dropdown", source = c("",input$excel_input$name) , strict = TRUE)%>%
+          hot_col("Pathology",type = "autocomplete", source = tr_sub_list$Pathology, strict = FALSE)
+        
         out_table
       })
 
@@ -193,7 +195,8 @@ server_ttf <- function(id, app_values) {
           hot_table(highlightCol = TRUE, highlightRow = TRUE,  rowHeaderWidth = 0, stretchH = 'all') %>%
           hot_col("Treatment",type = "dropdown", source = sort(unique(ttf_table$Treatment))) %>%
           hot_col("Subgroup",type = "dropdown", source = sort(unique(ttf_table$Subgroup))) %>%
-          hot_col("Pathology",type = "dropdown", source = sort(unique(ttf_table$Pathology)))
+          hot_col("Pathology",type = "dropdown", source = sort(unique(ttf_table$Pathology))) %>%
+          hot_col("PID.Name",type = "dropdown", source = c("",input$pid_input$name) , strict = TRUE) 
 
         out_table
 

@@ -218,6 +218,7 @@ make_risk_table <- function(img_input){
     risk_table <- risk_table[c("Treatment","Subgroup","Pathology","Value (Separate numbers by blank space)")]
     risk_table$Treatment[1] = "Time (in original unit)"
   }
+  risk_table$`PID.Name` <- ""
   risk_table
 }
 
