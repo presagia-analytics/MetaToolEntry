@@ -205,7 +205,7 @@ server_ttf <- function(id, app_values) {
       observeEvent(input$"add_ipd",{
         final_data <- isolate(ttf_values[[ns('final_data')]])
         risk_table <- isolate(ttf_values[[ns("risk_table")]])
-        browser()
+        #browser()
 
         final_data <- add_ipd(final_data, risk_table, input$pid_input, input$unit_time)
 
@@ -253,7 +253,7 @@ ui <- fluidPage(
 
 server <- function(input, output) {
  values <- reactiveValues()
- df <- read.csv(file.path(here::here(),"FirstDataSource.csv"))
+ df <- read.csv(file.path(here::here(),"tests_data/FirstDataSource.csv"))
  values[['summary_table']] <- df
  server_ttf("ttf1",values)
  output$text <- renderText({
