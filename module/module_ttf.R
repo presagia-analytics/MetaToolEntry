@@ -160,9 +160,9 @@ server_ttf <- function(id, app_values) {
       })
 
       #-----
-      risk_table_gen <- eventReactive(input$img_input,{
+      risk_table_gen <- eventReactive(list(input$img_input,input$pid_input),{
         make_risk_table(input$img_input$datapath)
-      })
+      }) 
 
       observe({
         if (!is.null(input$risk_table)) {
