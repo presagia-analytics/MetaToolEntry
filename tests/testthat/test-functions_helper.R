@@ -220,7 +220,7 @@ test_that("test upload ipd",{
 
 })
 
-test_that("calcaute ipd",{
+test_that("calcaute ipd from risk table",{
   risk_time <- c(0 , 3 , 6  ,9, 12, 15, 18 ,21, 24)
   risk_number <- c(135, 113 , 86,  69,  52 , 31,  15 ,  7 ,  0)
   dft$km_data <- SourceData$os.data[1:3]
@@ -253,8 +253,24 @@ test_that("calcaute ipd",{
   expect_error(print(p), NA)
 })
 
+test_that("test get ipd from upload or from risktable",{
+  # from upload 
+  
+  ipd_table <- add_ipd(dft, risk_table,ipd_input_files, "month")
+  expect_equal(dim(ipd_table),c(3,15))  #note, 15 is without km_data
+  expect_true(is.null(ipd_table$ipd[3][[1]]))
+  expect_false(is.null(ipd_table$ipd[2][[1]]))
+  
+  #from risk table
+  risk_table$Ipd.Name <- ""
+  dft$km_data <- SourceData$os.data[1:3]
 
-
+  ipd_table2 <- add_ipd(dft, risk_table,ipd_input_files,"month")
+  expect_equal(dim(ipd_table2),c(3,16))
+  expect_identical(class(ipd_table2$ipd), c("list"))
+  expect_false(all(sapply(ipd_table2$ipd, is.null)))
+  
+})
 
 
 test_that("merge outcome",{

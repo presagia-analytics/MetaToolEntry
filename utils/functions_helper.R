@@ -276,10 +276,11 @@ clean_risktable_vector <- function(xv){
 }
 
 add_ipd <- function(final_data, risk_table,ipd_input_files,unit_time = "month"){
+  
   if( any(risk_table$Ipd.Name != "")){
     ipd_table <- add_ipd_upload(final_data, risk_table,ipd_input_files)
   }else{
-    ipd_table <- add_ipd(final_data, risk_table, unit_time)
+    ipd_table <- add_ipd_risktable(final_data, risk_table, unit_time)
   }
   ipd_table
 }
