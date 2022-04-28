@@ -53,7 +53,9 @@ ui_ttf <- function(id) {
     ),
     h5(strong("Number at Risk Table:")),
     fluidRow(column(12,rHandsontableOutput(ns("risk_table")))),
-    fluidRow(column(12,verticalLayout(actionButton(ns("add_ipd"), "Save IPD Data")))),
+    fluidRow(
+      column(3,verticalLayout(actionButton(ns("show_risktable"), "Show Risk Table"))),
+      column(3,verticalLayout(actionButton(ns("add_ipd"), "Save IPD Data")))),
     h5(strong("IPD Table (Treatment combined):")),
     fluidRow(column(12,rHandsontableOutput(ns("ipd_table"))))
   )
@@ -160,7 +162,7 @@ server_ttf <- function(id, app_values) {
       })
 
       #-----
-      risk_table_gen <- eventReactive(list(input$img_input,input$pid_input),{
+      risk_table_gen <- eventReactive(input$show_risktable,{
         make_risk_table(input$img_input$datapath)
       }) 
 
