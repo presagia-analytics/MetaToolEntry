@@ -16,12 +16,12 @@ group_name <- function() {
   "everyone"
 }
 
-# A survival curve is a data.frame with a time and an event column.
+# A survival curve is a data.frame with a time and an survival rate column.
 survival_curve <- function(x) {
   assert(
     check_data_frame(x),
     'time' %in% names(x),
-    'event' %in% names(x),
+    'survival' %in% names(x),
     combine = "and"
   )
   add_class <- "survival_curve"

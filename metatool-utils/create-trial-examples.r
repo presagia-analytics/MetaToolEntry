@@ -28,7 +28,6 @@ ctgov_con <- function() {
 
 # Grab the survival data.
 doce_surv <- read_csv(file.path(here::here(), "example/NSCLC01642004_docetaxel.csv")) |>
-  rename(event = survival) |>
   survival_curve()
 
 # Grab the figures
