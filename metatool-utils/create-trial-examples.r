@@ -29,7 +29,7 @@ ctgov_con <- function() {
 # Grab the survival data.
 doce_surv <- read_csv(file.path(here::here(), "example/NSCLC01642004_docetaxel.csv")) |>
   survival_curve()
-7
+
 # Grab the figures
 doce_figs <- 
   tibble(uploaded = read_rawchar_doc("nivo-doce-example/1_os.PNG"),
@@ -55,8 +55,8 @@ doce_surv_outcome <-
     hr_95_ci_upper = 1.34,
     hr_95_ci_lower = .99,
     survival_curve = list(doce_surv),
-    survival_figures = list(doce_figs),
-    survival_ipd = list(doce_ipd)
+    survival_figures = list(doce_surv),
+    survival_ipd = list(doce_surv)
   ) |> 
   survival_outcome() 
 #  write_outcome(trial_con())
@@ -81,20 +81,24 @@ doce_con_outcome <- tibble(val = iris$Sepal.Length)
 doce_con_outcome <- continuous_outcome(doce_con_outcome, 
                                        treatment = "Docetaxal",
                                        subgroup = "refractory")
+
+
+
+
 #write_outcome(doce_con_outcome)
 
 # Create a publication
 pub <- 
   publication(
     article = 
-      read_rawchar_doc("nivo-doce-example/1_Nivolumab versus Docetaxel.pdf"),
+      read_rawchar_doc(file.path(here::here(), "example/1_Nivolumab versus Docetaxel.pdf")),
     doi = "asdfasd1234",
     year = 2022,
     first_name = "some",
     last_name = "dude"
   )
 
-test_trial <- trial("NCT1234", disease = "None", line = "First", 
+test_trial <- trial("NCT1234", disease = "None", line = "First", phase = "3",
                     outcome = list(doce_surv_outcome = doce_surv_outcome, 
                                    doce_cat_outcome = doce_cat_outcome,
                                    doce_con_outcome = doce_con_outcome),

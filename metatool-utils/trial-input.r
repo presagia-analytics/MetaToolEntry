@@ -333,7 +333,7 @@ write_publication <- function(x, con, verbose = FALSE, ...) {
   x
 }
 
-trial <- function(trial_id, disease, line, outcome, publication, 
+trial <- function(trial_id, disease, line, phase, outcome, publication, 
                   nickname = NULL) {
 
   assert(
@@ -343,6 +343,8 @@ trial <- function(trial_id, disease, line, outcome, publication,
     length(disease) == 1,
     check_character(line),
     length(line) == 1,
+    check_character(phase),
+    length(phase) == 1,
     combine = "and"    
   )
 
@@ -361,6 +363,7 @@ trial <- function(trial_id, disease, line, outcome, publication,
     trial_id = trial_id,
     disease = disease,
     line = line,
+    phase = phase,
     outcome = list(outcome),
     nickname = nickname,
     publication = list(publication)
