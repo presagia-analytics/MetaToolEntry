@@ -114,6 +114,22 @@ categorical_outcome <- function(
   x
 }
 
+categorical_outcome2 <- function(x) {
+  assert(
+    check_data_frame(x),
+  )
+  table_names <- colnames(x)
+  add_class <- c("categorical_outcome", "outcome")
+    
+  x <- make_outcome(x, table_names, add_class)
+  
+  outcome_id <- UUIDgenerate()
+  x$outcome_id <- outcome_id
+  x
+}
+
+
+
 continuous_outcome <- function(x) {
 
   table_names <- c(
@@ -134,6 +150,21 @@ continuous_outcome <- function(x) {
   x$outcome_id <- outcome_id
   x
 }
+
+continuous_outcome2 <- function(x) {
+  assert(
+    check_data_frame(x),
+  )
+  table_names <- colnames(x)
+  add_class <- c("continuous_outcome", "outcome")
+  x <- make_outcome(x, table_names, add_class)
+
+  outcome_id <- UUIDgenerate()
+  x$outcome_id <- outcome_id
+  x
+}
+
+
 
 publication <- function(article, doi, year, first_name, last_name) {
   

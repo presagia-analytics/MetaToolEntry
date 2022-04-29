@@ -66,11 +66,8 @@ doce_cat_outcome <-
   tibble(
     val = factor(c("CR", "PR", "PR", "PD"), levels = c("PD", "SD", "PR", "CR"),
                  ordered = TRUE)
-  )
-
-doce_cat_outcome <- categorical_outcome(doce_cat_outcome, 
-                                        treatment = "Docetaxal", 
-                                        subgroup = "treatment naive")
+  )|> 
+  categorical_outcome2() 
 
 # Write the categorical outcome to the db.
 #write_outcome(doce_cat_outcome, trial_con())
