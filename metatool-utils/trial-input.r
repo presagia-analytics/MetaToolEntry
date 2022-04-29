@@ -110,23 +110,27 @@ categorical_outcome <- function(
   x$ordered <- ordered
   x$treatment <- treatment
   x$subgroup <- subgroup
-
+  x$pathology <- pathology
   x
 }
 
-continuous_outcome <- function(
-  x,
-  treatment,
-  subgroup) {
+continuous_outcome <- function(x) {
 
-  table_names <- "val"
+  table_names <- c(
+    "treatment",
+    "subgroup",
+    "pathology",
+    "n",
+    "mean",
+    "sd",
+    "median",
+    "range")
+
   add_class <- c("continuous_outcome", "outcome")
   x <- make_outcome(x, table_names, add_class)
 
   outcome_id <- UUIDgenerate()
   x$outcome_id <- outcome_id
-  x$treatment <- treatment
-  x$subgroup <- subgroup
   x
 }
 

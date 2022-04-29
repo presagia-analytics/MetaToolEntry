@@ -78,12 +78,19 @@ doce_cat_outcome <- categorical_outcome(doce_cat_outcome,
 # Create a continuous outcome.
 doce_con_outcome <- tibble(val = iris$Sepal.Length)
 
-doce_con_outcome <- continuous_outcome(doce_con_outcome, 
-                                       treatment = "Docetaxal",
-                                       subgroup = "refractory")
 
-
-
+doce_con_outcom <- 
+  tibble(
+    treatment = "docetaxel",
+    subgroup = "ITT",
+    pathology = "pathology",
+    n = 100,
+    mean = 55,
+    sd = 20,
+    median = 35,
+    range = 25
+  ) |> 
+  continuous_outcome() 
 
 #write_outcome(doce_con_outcome)
 
