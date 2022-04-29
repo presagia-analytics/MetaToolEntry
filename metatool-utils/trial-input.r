@@ -117,6 +117,7 @@ categorical_outcome <- function(
 continuous_outcome <- function(x) {
 
   table_names <- c(
+    "outcome_name",
     "treatment",
     "subgroup",
     "pathology",

@@ -81,6 +81,7 @@ doce_con_outcome <- tibble(val = iris$Sepal.Length)
 
 doce_con_outcom <- 
   tibble(
+    outcome_name = "XXX",
     treatment = "docetaxel",
     subgroup = "ITT",
     pathology = "pathology",
