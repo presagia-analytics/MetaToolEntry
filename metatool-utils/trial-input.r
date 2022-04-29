@@ -59,10 +59,11 @@ survival_figures <- function(x) {
 
 survival_outcome <- function(x) {
   table_names <- c("survival_type", "time_unit", "treatment", 
-                   "subgroup", "n", "num_events", "est_median", 
-                   "est_95_ci_upper", "est_95_ci_lower", "hazard_ratio", 
-                   "hr_95_ci_upper", "hr_95_ci_lower", "survival_curve", 
-                   "survival_figures")
+                   "subgroup", "pathology", "n", "num_events", 
+                   "est_median", "est_95_ci_upper", "est_95_ci_lower", 
+                   "fup_median" ,"hazard_ratio", "hr_95_ci_upper", 
+                   "hr_95_ci_lower", "survival_curve",  "survival_figures",
+                   "survival_ipd")
 
   add_class <- c("survival_outcome", "outcome")
   x <- make_outcome(x, table_names, add_class)

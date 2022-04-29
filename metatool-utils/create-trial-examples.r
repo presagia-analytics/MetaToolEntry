@@ -29,7 +29,7 @@ ctgov_con <- function() {
 # Grab the survival data.
 doce_surv <- read_csv(file.path(here::here(), "example/NSCLC01642004_docetaxel.csv")) |>
   survival_curve()
-
+7
 # Grab the figures
 doce_figs <- 
   tibble(uploaded = read_rawchar_doc("nivo-doce-example/1_os.PNG"),
@@ -44,16 +44,19 @@ doce_surv_outcome <-
     time_unit = "month",
     treatment = "docetaxel",
     subgroup = "ITT",
+    pathology = "pathology",
     n = 100,
     num_events = 55,
     est_median = 20,
     est_95_ci_upper = 35,
     est_95_ci_lower = 25,
+    fup_median = 20,
     hazard_ratio = 1.1,
     hr_95_ci_upper = 1.34,
     hr_95_ci_lower = .99,
     survival_curve = list(doce_surv),
-    survival_figures = list(doce_figs)
+    survival_figures = list(doce_figs),
+    survival_ipd = list(doce_ipd)
   ) |> 
   survival_outcome() 
 #  write_outcome(trial_con())
