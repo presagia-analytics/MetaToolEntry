@@ -22,9 +22,7 @@ make_doce_outcome <- function(combined_df_row,input_info){
   
   outcome_names_all <- stringr::str_remove(colnames(combined_df_row)[grepl('\\b.N\\b',colnames(combined_df_row))], ".N")
   doce_outcome <- list()
-  # for each of type of outcome;
-  
-  #input_info$`os-unit_time`
+  browser()
   
   for (outcome_i in outcome_names_all){
     df_name <- paste0("doce_",outcome_i,"_outcome")
@@ -33,9 +31,9 @@ make_doce_outcome <- function(combined_df_row,input_info){
       doce_outcome[[df_name]] <- make_surv_outcome(outcome_i,combined_df_row,input_info)
     }
     
-    # if(outcome_i %in% c("RECIST")){
-    #   doce_outcome[[df_name]] <- make_RECIST_outcome(combined_df_row,input_info)  # column is not fixed. 
-    # }
+    if(outcome_i %in% c("RECIST")){
+      doce_outcome[[df_name]] <- categorical_outcome2(combined_df_row)  # column is not fixed.
+    }
     # 
     # if(outcome_i %in% c("con")){
     #   doce_outcome[[df_name]] <- make_con_outcome(outcome_i,combined_df_row,input_info)
@@ -47,8 +45,9 @@ make_doce_outcome <- function(combined_df_row,input_info){
 
 
 make_surv_outcome <- function(outcome_name,combined_df_row,input_info){
+  browser()
   ttf_table <- combined_df_row[,c(1,2,which(grepl("os",colnames(combined_df_row))))]
-  colnames(ttf_table) <- c(colnames(create_ttf_table(1))[-1],"km_data","fig_path")
+  colnames(ttf_table) <- c(colnames(create_ttf_table(1))[-1],"km_data","fig_path","ipd")
   
   #browser()
   # # Grab the survival data.
@@ -56,7 +55,6 @@ make_surv_outcome <- function(outcome_name,combined_df_row,input_info){
   
   if(!is.null(km_data )){
     doce_surv <- km_data |>
-      rename(event = surv) |>
       survival_curve()
   }else{
     doce_surv <- NULL
@@ -80,17 +78,20 @@ make_surv_outcome <- function(outcome_name,combined_df_row,input_info){
     survival_type = outcome_name,           
     time_unit = unit_time,  
     treatment = ttf_table$Treatment,   
-    subgroup = ttf_table$Subgroup,    
+    subgroup = ttf_table$Subgroup,
+    patholgy = ttf_table$Pathology,
     n = ttf_table$N,
     num_events = ttf_table$No.Event,
     est_median = ttf_table$Est.Median,
     est_95_ci_upper = ttf_table$EM.95CIU,
     est_95_ci_lower = ttf_table$EM.95CIL,
+    fup_median = Fup.Median,
     hazard_ratio = ttf_table$HR,
     hr_95_ci_upper = ttf_table$HR.95CIU,
     hr_95_ci_lower = ttf_table$HR.95CIL,
     survival_curve = list(doce_surv),
-    survival_figures = list(doce_figs)
+    survival_figures = list(doce_figs),
+    survival_ipd = ttf_table$ipd
   ) |>       
     survival_outcome() 
   

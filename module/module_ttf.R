@@ -98,12 +98,16 @@ server_ttf <- function(id, app_values) {
 
       observeEvent(input$save_table,{
           tmp_df <- isolate(ttf_values[[ns("ttf_table")]])
+          
+          tmp_df$km_data <- NA
+          tmp_df$ipd <- NA
+          
           rhandtable <- tmp_df
           if(!is.null(input$excel_input)){
             tmp_df <- tmp_df %>%
             add_km(input$excel_input, input$unit_time) %>%
             update_median()
-            rhandtable  <- tmp_df[-which(colnames(tmp_df)%in% c("km_data"))]
+            rhandtable  <- tmp_df[-which(colnames(tmp_df)%in% c("km_data","ipd"))]
           }
           if(!is.null(input$img_input)){
             tmp_df$fig_path <- input$img_input$datapath
@@ -239,32 +243,32 @@ server_ttf <- function(id, app_values) {
 }
 
 
-library(shiny)
-library(rhandsontable)
-library(ggplot2)
-source(file.path(here::here(), "utils/functions_helper.R"), encoding = 'UTF-8')
-
-options("gargoyle.talkative" = TRUE)
-
-ui <- fluidPage(
- ui_ttf("ttf1"),
- hr(),
- textOutput("text"),
- dataTableOutput('table')
-)
-
-server <- function(input, output) {
- values <- reactiveValues()
- df <- read.csv(file.path(here::here(),"tests_data/FirstDataSource.csv"))
- values[['summary_table']] <- df
- server_ttf("ttf1",values)
- output$text <- renderText({
-   paste0(names(values),sep = "  //")
-   })
- output$table <- renderDataTable(
-   #browser()
-   values[["all_outcome"]]
-   )
-}
-
-shinyApp(ui, server)
+# library(shiny)
+# library(rhandsontable)
+# library(ggplot2)
+# source(file.path(here::here(), "utils/functions_helper.R"), encoding = 'UTF-8')
+# 
+# options("gargoyle.talkative" = TRUE)
+# 
+# ui <- fluidPage(
+#  ui_ttf("ttf1"),
+#  hr(),
+#  textOutput("text"),
+#  dataTableOutput('table')
+# )
+# 
+# server <- function(input, output) {
+#  values <- reactiveValues()
+#  df <- read.csv(file.path(here::here(),"tests_data/FirstDataSource.csv"))
+#  values[['summary_table']] <- df
+#  server_ttf("ttf1",values)
+#  output$text <- renderText({
+#    paste0(names(values),sep = "  //")
+#    })
+#  output$table <- renderDataTable(
+#    #browser()
+#    values[["all_outcome"]]
+#    )
+# }
+# 
+# shinyApp(ui, server)

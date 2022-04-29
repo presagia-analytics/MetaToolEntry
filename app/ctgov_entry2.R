@@ -12,8 +12,9 @@ source(file.path(here::here(), "module/module_ttf.R"), encoding = 'UTF-8')
 source(file.path(here::here(), "module/module_num.R"), encoding = 'UTF-8')
 source(file.path(here::here(), "module/module_cat.R"), encoding = 'UTF-8')
 source(file.path(here::here(), "utils/functions_helper.R"), encoding = 'UTF-8')
-source("C:/Users/Preadmin/OneDrive - Telperian/Github/ctrialsgovshiny/metatool-utils/trial-input.r")
-source("C:/Users/Preadmin/OneDrive - Telperian/Github/ctrialsgovshiny/metatool-utils/rawchar.r")
+source(file.path(here::here(), "utils/entry_db.R"), encoding = 'UTF-8')
+source(file.path(here::here(), "metatool-utils/trial-input.r"))
+source(file.path(here::here(), "/metatool-utils/rawchar.r"))
 
 shinyInput <- function(FUN, len, id, ...) {
   inputs <- character(len)

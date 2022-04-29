@@ -64,8 +64,8 @@ doce_surv_outcome <-
 # Create a categorical outcome.
 doce_cat_outcome <- 
   tibble(
-    val = factor(c("CR", "PR", "PR", "PD"), levels = c("PD", "SD", "PR", "CR"),
-                 ordered = TRUE)
+    x1 = "a",
+    x2= "b"
   )|> 
   categorical_outcome2() 
 
@@ -89,6 +89,22 @@ doce_con_outcom <-
     range = 25
   ) |> 
   continuous_outcome() 
+
+
+doce_con_outcom2 <- 
+  tibble(
+    outcome_name = "XXX",
+    treatment = "docetaxel",
+    subgroup = "ITT",
+    pathology = "pathology",
+    n = 100,
+    mean = 55,
+    sd = 20,
+    median = 35,
+    range = 25
+  ) |> 
+  continuous_outcome2() 
+
 
 #write_outcome(doce_con_outcome)
 
