@@ -64,10 +64,14 @@ doce_surv_outcome <-
 # Create a categorical outcome.
 doce_cat_outcome <- 
   tibble(
-    x1 = "a",
-    x2= "b"
-  )|> 
-  categorical_outcome2() 
+    val = factor(c("CR", "PR", "PR", "PD"), levels = c("PD", "SD", "PR", "CR"),
+                 ordered = TRUE)
+  )
+
+doce_cat_outcome <- categorical_outcome(doce_cat_outcome, 
+                                        treatment = "Docetaxal", 
+                                        subgroup = "treatment naive",
+                                        pathology = "sss")
 
 # Write the categorical outcome to the db.
 #write_outcome(doce_cat_outcome, trial_con())
@@ -76,7 +80,7 @@ doce_cat_outcome <-
 doce_con_outcome <- tibble(val = iris$Sepal.Length)
 
 
-doce_con_outcom <- 
+doce_con_outcome <- 
   tibble(
     outcome_name = "XXX",
     treatment = "docetaxel",
@@ -103,8 +107,22 @@ doce_con_outcom2 <-
     median = 35,
     range = 25
   ) |> 
-  continuous_outcome2() 
+  continuous_outcome() 
 
+
+doce_con_outcom2_2 <- 
+  tibble(
+    outcome_name = c("XXX","XXX"),
+    treatment = c("docetaxel","docetaxel"),
+    subgroup = c("ITT","ITT"),
+    pathology = c("pathology","pathology"),
+    n = c(100,100),
+    mean = c(55,100),
+    sd = c(20,100),
+    median = c(35,100),
+    range = c(25,100),
+  ) |> 
+  continuous_outcome2() 
 
 #write_outcome(doce_con_outcome)
 
@@ -126,4 +144,9 @@ test_trial <- trial("NCT1234", disease = "None", line = "First", phase = "3",
                     publication = pub,
                     nickname = "test trial")
 
-write_trial(test_trial, trial_con())
+single_trial <- trial("NCT1111", disease = "None", line = "2", phase = "3",
+                    outcome = doce_outcome_list,
+                    publication = pub,
+                    nickname = "test trial")
+
+write_trial(single_trial, trial_con())

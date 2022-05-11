@@ -21,7 +21,7 @@ survival_curve <- function(x) {
   assert(
     check_data_frame(x),
     'time' %in% names(x),
-    'survival' %in% names(x),
+    'surv' %in% names(x),
     combine = "and"
   )
   add_class <- "survival_curve"
@@ -32,6 +32,7 @@ survival_curve <- function(x) {
 
 make_outcome <- function(x, table_names, add_class) {
   # todo: Should types be checked?
+  #browser()
   assert(
     check_data_frame(x),
     ncol(x) == length(table_names),
@@ -58,15 +59,11 @@ survival_figures <- function(x) {
 }
 
 survival_outcome <- function(x) {
-  table_names <- c("survival_type", "time_unit", "treatment", 
-                   "subgroup", "pathology", "n", "num_events", 
-                   "est_median", "est_95_ci_upper", "est_95_ci_lower", 
-                   "fup_median" ,"hazard_ratio", "hr_95_ci_upper", 
-                   "hr_95_ci_lower", "survival_curve",  "survival_figures",
-                   "survival_ipd")
+  table_names <-colnames(x)
 
   add_class <- c("survival_outcome", "outcome")
   x <- make_outcome(x, table_names, add_class)
+
   assert(
     length(x$survival_type) == 1,
     x$survival_type %in% c("os", "pfs"),
@@ -87,13 +84,16 @@ survival_outcome <- function(x) {
 
 categorical_outcome <- function(
   x,
+  outcome_names,
   treatment,
-  subgroup) {
+  subgroup,
+  pathology,
+  odd_ratio,
+  odd_ratio_95ci) {
 
   assert(
     check_data_frame(x),
   )
-
   table_names <- c("n", "val")
   add_class <- c("categorical_outcome", "outcome")
   ordered <- is.ordered(x[["val"]])
@@ -108,50 +108,55 @@ categorical_outcome <- function(
   x$outcome_id <- outcome_id
   x$levels <- deparse(levels)
   x$ordered <- ordered
+  x$outcome_names <- outcome_names
   x$treatment <- treatment
   x$subgroup <- subgroup
   x$pathology <- pathology
-  x
-}
-
-categorical_outcome2 <- function(x) {
-  assert(
-    check_data_frame(x),
-  )
-  table_names <- colnames(x)
-  add_class <- c("categorical_outcome", "outcome")
-    
-  x <- make_outcome(x, table_names, add_class)
-  
-  outcome_id <- UUIDgenerate()
-  x$outcome_id <- outcome_id
+  x$odd_ratio <- odd_ratio
+  x$odd_ratio_95ci <- odd_ratio_95ci
   x
 }
 
 
+
+# categorical_outcome2 <- function(x) {
+#   assert(
+#     check_data_frame(x),
+#   )
+#   table_names <- colnames(x)
+#   add_class <- c("categorical_outcome", "outcome")
+#     
+#   x <- make_outcome(x, table_names, add_class)
+#   
+#   outcome_id <- UUIDgenerate()
+#   x$outcome_id <- outcome_id
+#   x
+# }
+
+
+
+# continuous_outcome <- function(x) {
+# 
+#   table_names <- c(
+#     "outcome_name",
+#     "treatment",
+#     "subgroup",
+#     "pathology",
+#     "n",
+#     "mean",
+#     "sd",
+#     "median",
+#     "range")
+# 
+#   add_class <- c("continuous_outcome", "outcome")
+#   x <- make_outcome(x, table_names, add_class)
+# 
+#   outcome_id <- UUIDgenerate()
+#   x$outcome_id <- outcome_id
+#   x
+# }
 
 continuous_outcome <- function(x) {
-
-  table_names <- c(
-    "outcome_name",
-    "treatment",
-    "subgroup",
-    "pathology",
-    "n",
-    "mean",
-    "sd",
-    "median",
-    "range")
-
-  add_class <- c("continuous_outcome", "outcome")
-  x <- make_outcome(x, table_names, add_class)
-
-  outcome_id <- UUIDgenerate()
-  x$outcome_id <- outcome_id
-  x
-}
-
-continuous_outcome2 <- function(x) {
   assert(
     check_data_frame(x),
   )
@@ -324,11 +329,11 @@ write_outcome.survival_outcome <- function(x, con, verbose = FALSE, ...) {
     db_copy_to(con, "survival_outcome", as_tibble(xs[c(),]),
                temporary = FALSE)
   }
-
+  #browser()
   db_surv_out <- tbl(con, "survival_outcome")
   sync_table(db_surv_out, xs, 
              by = c("trial_id", "survival_type", "time_unit", 
-                    "treatment", "subgroup"))
+                    "treatment", "subgroup","pathology"))
   x
 }
 
