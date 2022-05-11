@@ -7,7 +7,7 @@ source(file.path(here::here(),"metatool-utils/trial-input.r"))
 trial_con <- function() {
   dbConnect(
     duckdb::duckdb(),
-    dbdir = file.path(here::here(), "ctgov-snaps/trial-input.duckdb"),
+    dbdir = file.path(here::here(), "ctgov-snaps/trial-input2.duckdb"),
     read_only = FALSE
   )
 }
@@ -145,8 +145,11 @@ test_trial <- trial("NCT1234", disease = "None", line = "First", phase = "3",
                     nickname = "test trial")
 
 single_trial <- trial("NCT1111", disease = "None", line = "2", phase = "3",
-                    outcome = doce_outcome_list,
-                    publication = pub,
+                    outcome = all_tmp,
+                    publication = doce_pub,
                     nickname = "test trial")
+trial_con_db <- trial_con()
 
-write_trial(single_trial, trial_con())
+write_trial(single_trial, )
+write_trial(single_trial, con )
+

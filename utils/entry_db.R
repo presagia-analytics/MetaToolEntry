@@ -196,6 +196,7 @@ make_trial <- function(input_info,doce_outcome_list,pub,nct_number){
   s_trial <- trial(nct_number,
                    disease = input_info$Type, 
                    line = input_info$TrLine, 
+                   phase = input_info$Phase,
                    outcome = doce_outcome_list,
                    publication = pub,
                    nickname = "test trial")

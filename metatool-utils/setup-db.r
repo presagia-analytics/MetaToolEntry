@@ -3,11 +3,11 @@ library(duckdb)
 
 con <- dbConnect(
   duckdb::duckdb(),
-  dbdir = file.path(here::here(), "ctgov-snaps/trial-input.duckdb"),
+  dbdir = file.path(here::here(), "ctgov-snaps/trial-input2.duckdb"),
   read_only=FALSE
 )
 
-setup_db <- readLines('setup-db.sql')
+setup_db <- readLines(file.path(here::here(),'metatool-utils/setup-db.sql'))
 
 sudi <- which(setup_db == "")
 
