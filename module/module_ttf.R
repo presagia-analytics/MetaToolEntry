@@ -49,11 +49,13 @@ ui_ttf <- function(id) {
     ),
     hr(),
     h4(strong("Patient Level Data Generator")),
-
+    h5("If you do not have PID data, you can generate IPD data using this section."),
+    br(),
     h5(strong("Number at Risk Table:")),
     fluidRow(column(12,rHandsontableOutput(ns("risk_table")))),
     fluidRow(
-      column(3,verticalLayout(actionButton(ns("show_risktable"), "Show Risk Table"))),
+      column(3,verticalLayout(actionButton(ns("show_risktable"), "Use Risk Table"))),
+      column(3,verticalLayout(actionButton(ns("use_median"), "Use Risk Table"))),
       column(3,verticalLayout(actionButton(ns("add_ipd"), "Save IPD Data")))),
     h5(strong("IPD Table (Treatment combined):")),
     fluidRow(column(12,rHandsontableOutput(ns("ipd_table"))))
@@ -86,15 +88,53 @@ server_ttf <- function(id, app_values) {
           )
         }
       })
-
-      ##  Excel figure
-      output$excfig <- renderPlot({
-        #browser()
-        gargoyle::watch("make_plot")
-        ttf_table <- isolate(ttf_values[[ns("final_data")]])
-        try(table2survplot(ttf_table,input$excel_input))
+      
+      ## survival table
+      ttf_table_gen <- reactive({
+        create_ttf_table(6)
       })
-
+      
+      observe({
+        if (!is.null(input$ttf_table)) {
+          ttf_values[["ttf_table_pre"]] <- isolate(ttf_values[[ns("ttf_table")]])
+          DF = hot_to_r(input$ttf_table)
+        } else {
+          if (is.null(ttf_values[[ns("ttf_table")]]))
+            DF <- ttf_table_gen()
+          else
+            DF <- ttf_values[[ns("ttf_table")]]
+        }
+        ttf_values[[ns("ttf_table")]] <- DF
+      })
+      
+      
+      output$ttf_table <- renderRHandsontable({
+        
+        if (is.null(ttf_values[[ns("ttf_table")]])){
+          res_table  = ttf_table_gen()
+        }else{
+          res_table = ttf_values[[ns("ttf_table")]]
+        }
+        
+        sumtable <- isolate(app_values[['summary_table']])
+        all_outcome <- isolate(app_values[['all_outcome']])
+        tr_sub_list <- make_trsub_list(sumtable, all_outcome)
+        
+        res_table <- adjust_row(res_table, input$n_arms)
+        
+        out_table <- rhandsontable(res_table ,useTypes = TRUE, selectCallback = TRUE, height = 250) %>%
+          hot_table(highlightCol = TRUE, highlightRow = TRUE,  rowHeaderWidth = 0, stretchH = 'all') %>%
+          hot_col(col = "ID", readOnly = TRUE) %>%
+          hot_col("Treatment",type = "autocomplete", source = tr_sub_list$Treatment , strict = FALSE) %>%
+          hot_col("Subgroup",type = "autocomplete", source = tr_sub_list$Subgroup , strict = FALSE) %>%
+          hot_col("Pathology",type = "autocomplete", source = tr_sub_list$Pathology, strict = FALSE) %>%
+          hot_col("KM.Data",type = "dropdown", source = c("",input$excel_input$name) , strict = TRUE) %>%
+          hot_col("IPD.Data",type = "dropdown", source = c("",input$ipd_input$name) , strict = TRUE)
+        
+        out_table
+      })
+      
+      ## save button
       observeEvent(input$save_table,{
           tmp_df <- isolate(ttf_values[[ns("ttf_table")]])
           rhandtable <- tmp_df
@@ -130,52 +170,27 @@ server_ttf <- function(id, app_values) {
 
           gargoyle::trigger("make_plot")
       })
-
-      ttf_table_gen <- reactive({
-        create_ttf_table(6)
+      
+      
+      ## make figures 
+      output$excfig <- renderPlot({
+        #browser()
+        gargoyle::watch("make_plot")
+        ttf_table <- isolate(ttf_values[[ns("final_data")]])
+        try(table2survplot(ttf_table,input$excel_input))
+      })
+      
+      output$ipdfig <- renderPlot({
+        gargoyle::watch("make_ipd")
+        ipd_table <- isolate(ttf_values[[ns('ipd_table')]])
+        if(!is.null(ipd_table)){
+          make_ipd_figure(ipd_table)}
       })
 
-      observe({
-        if (!is.null(input$ttf_table)) {
-          ttf_values[["ttf_table_pre"]] <- isolate(ttf_values[[ns("ttf_table")]])
-          DF = hot_to_r(input$ttf_table)
-        } else {
-          if (is.null(ttf_values[[ns("ttf_table")]]))
-            DF <- ttf_table_gen()
-          else
-            DF <- ttf_values[[ns("ttf_table")]]
-        }
-        ttf_values[[ns("ttf_table")]] <- DF
-      })
-
-
-      output$ttf_table <- renderRHandsontable({
-
-        if (is.null(ttf_values[[ns("ttf_table")]])){
-          res_table  = ttf_table_gen()
-        }else{
-          res_table = ttf_values[[ns("ttf_table")]]
-        }
-
-        sumtable <- isolate(app_values[['summary_table']])
-        all_outcome <- isolate(app_values[['all_outcome']])
-        tr_sub_list <- make_trsub_list(sumtable, all_outcome)
-
-        res_table <- adjust_row(res_table, input$n_arms)
-
-        out_table <- rhandsontable(res_table ,useTypes = TRUE, selectCallback = TRUE, height = 250) %>%
-          hot_table(highlightCol = TRUE, highlightRow = TRUE,  rowHeaderWidth = 0, stretchH = 'all') %>%
-          hot_col(col = "ID", readOnly = TRUE) %>%
-          hot_col("Treatment",type = "autocomplete", source = tr_sub_list$Treatment , strict = FALSE) %>%
-          hot_col("Subgroup",type = "autocomplete", source = tr_sub_list$Subgroup , strict = FALSE) %>%
-          hot_col("Pathology",type = "autocomplete", source = tr_sub_list$Pathology, strict = FALSE) %>%
-          hot_col("KM.Data",type = "dropdown", source = c("",input$excel_input$name) , strict = TRUE) %>%
-          hot_col("IPD.Data",type = "dropdown", source = c("",input$ipd_input$name) , strict = TRUE)
-        
-        out_table
-      })
+      
 
       #-----
+      # IPD generator
       risk_table_gen <- eventReactive(input$show_risktable,{
         make_risk_table(input$img_input$datapath)
       }) 
@@ -240,12 +255,7 @@ server_ttf <- function(id, app_values) {
         }
       })
 
-      output$ipdfig <- renderPlot({
-        gargoyle::watch("make_ipd")
-        ipd_table <- isolate(ttf_values[[ns('ipd_table')]])
-        if(!is.null(ipd_table)){
-        make_ipd_figure(ipd_table)}
-      })
+
 
 
     }
