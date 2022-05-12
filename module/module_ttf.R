@@ -145,9 +145,8 @@ server_ttf <- function(id, app_values) {
           rhandtable <- tmp_df
           
           tmp_df$km_data <- NA
-          tmp_df$ipd <- NA
-          tmp_df$ipd_type <- NA
-          tmp_df$fig_path <- NA
+
+          
           
           if(!is.null(input$excel_input)){
             tmp_df <- 
@@ -156,12 +155,16 @@ server_ttf <- function(id, app_values) {
                 update_median()
                 rhandtable  <- tmp_df[-which(colnames(tmp_df)%in% c("km_data","ipd"))]
           }
+
+          tmp_df$ipd <- NA
+          tmp_df$ipd_type <- NA
           
           if(!is.null(input$ipd_input)){
             tmp_df <- 
               tmp_df %>%
               add_ipd_upload(input$ipd_input)
           }
+          tmp_df$fig_path <- NA
           
           if(!is.null(input$img_input)){
             tmp_df$fig_path <- input$img_input$datapath
@@ -237,11 +240,11 @@ server_ttf <- function(id, app_values) {
 
       })
 
-      observeEvent(input$use_risktable,{
+      observeEvent(input$add_ipd,{
         final_data <- isolate(ttf_values[[ns('final_data')]])
         risk_table <- isolate(ttf_values[[ns("risk_table")]])
 
-        final_data <- add_ipd_risktable(final_data, risk_table, input$ipd_input, input$unit_time)
+        final_data <- add_ipd_risktable(final_data, risk_table, input$unit_time)
 
         ttf_values[[ns('final_data')]] <- make_final_table(final_data, ns)
         ttf_values[[ns('ipd_table')]] <- do.call(rbind,final_data$ipd)
