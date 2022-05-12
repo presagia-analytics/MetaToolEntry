@@ -45,10 +45,15 @@ risk_table <- tibble::tibble(
   
 )
 
-dft_final<- dft
+dft_final_ep<- dft
+dft_final_ep<- dft
+dft_final_ep$km_data <- NA
+dft_final_ep$ipd <- NA
+dft_final_ep$ipd_type <- NA
+dft_final_ep$fig_path <- NA
+
+
+dft_final<- dft_final_ep
 dft_final$km_data <- SourceData$os.data[1:3]
-dft_final$ipd <- NA
-dft_final$ipd_type <- NA
-dft_final$fig_path <- NA
 
 save(dft, km_input_files, ipd_input_files, risk_table,dft_final,file = file.path(here::here(),"/tests_data/ttf_module_data.RData"))

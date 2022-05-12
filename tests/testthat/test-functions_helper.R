@@ -130,30 +130,34 @@ test_that("convert and clean km time", {
 })
 
 test_that("convert and clean km time", {
-  test_df <- add_km(dft,km_input_files)
-  expect_equal(dim(test_df),c(3,16))
+  
+  ## test normal cases
+  test_df <- add_km(dft_final_ep,km_input_files)
+  expect_equal(dim(test_df),c(3,17))
   expect_identical(test_df$km_data[[3]],NULL)
-
-  test_df <- add_km(dft,km_input_files[1,])
-  expect_equal(dim(test_df),c(3,16))
+  
+  ## test when only upload one curve, the second curve should be null (shouldn't happen)
+  test_df <- add_km(dft_final_ep,km_input_files[1,])
+  expect_equal(dim(test_df),c(3,17))
   expect_identical(test_df$km_data[[2]],NULL)
-  expect_identical(colnames(test_df )[16], "km_data")
+  expect_identical(colnames(test_df )[17], "km_data")
 
-  dft$km_data <- ""
-  test_df <- add_km(dft,NULL)
-  expect_identical(test_df$km_data[[1]],"")
+  ## test when there is no upload curve (shouldn't happen)
+  test_df <- add_km(dft_final_ep,NULL)
+  expect_identical(test_df$km_data[[1]],NULL)
 
-  dft$KM.Data <- ""
-  test_df <- add_km(dft,km_input_files[1,])
+  ## test when user didn't select the file name in the rhandson table
+  dft_final_ep$KM.Data <- ""
+  test_df <- add_km(dft_final_ep,km_input_files[1,])
   expect_identical(test_df$km_data[[1]],NULL)
 })
 
 test_that("get median survival", {
-  dft$km_data <- SourceData$os.data[1:3]
-  expect_equal(get_ttf_median(dft$km_data[[1]]),"5.99")
+
+  expect_equal(get_ttf_median(dft_final$km_data[[1]]),"5.99")
   expect_equal(get_ttf_median(NULL),"")
 
-  dft2 <- dft
+  dft2 <- dft_final
   dft2$Est.Median<- ""
   expect_identical(update_median(dft2)$Est.Median,c("5.99", "9.15", "9.14"))
 })
@@ -174,16 +178,16 @@ test_that("get risk table from image",{
 
 })
 
-# test_that("clean risk table",{
-#   risk_table_test <- clean_risktable(risk_table)
-#   expect_equal(dim(risk_table_test),c(3,6))
-#   expect_identical(class(risk_table_test$value), c("list"))
-#   expect_identical(class(risk_table_test$value[[1]]), c("numeric"))
-# })
+test_that("clean risk table",{
+  risk_table_test <- clean_risktable(risk_table)
+  expect_equal(dim(risk_table_test),c(3,5))
+  expect_identical(class(risk_table_test$value), c("list"))
+  expect_identical(class(risk_table_test$value[[1]]), c("numeric"))
+})
 
 test_that("test upload ipd",{
-  ipd_table <- add_ipd_upload(dft, ipd_input_files)
-  expect_equal(dim(ipd_table),c(3,16))  #note, 16 is without km_data
+  ipd_table <- add_ipd_upload(dft_final, ipd_input_files)
+  expect_equal(dim(ipd_table),c(3,18))  #note, 16 is without km_data
   expect_true(is.null(ipd_table$ipd[1][[1]]))
   expect_false(is.null(ipd_table$ipd[2][[1]]))
 
@@ -194,19 +198,25 @@ test_that("calcaute ipd from risk table",{
   risk_number <- c(135, 113 , 86,  69,  52 , 31,  15 ,  7 ,  0)
   dft$km_data <- SourceData$os.data[1:3]
 
-  ipd_test <- get_ipd_risktable(risk_time, risk_number, dft$km_data[[1]])
+  ipd_test <- get_ipd_risktable(risk_time, risk_number, dft_final$km_data[[1]])
   expect_equal(dim(ipd_test),c(135,5))
-
+})
+  
+test_that("calcaute ipd from median survival",{
   ipd_test2 <- get_ipd_median(0.2,7,10)
   expect_equal(dim(ipd_test2),c(10,5))
-
+  
+  ## test when there is no number of event, will use 70% of the total number
   ipd_test3 <- get_ipd_median(0.4," ",4)
   expect_equal(dim(ipd_test3),c(4,5))
   expect_false(all(is.na(get_ipd_median(0.4," ",4)$time)))
   ##  parcial risk table
+})
 
+  
+test_that("calcaute ipd from risk table",{  
+  
   ## null risk table
-
   ipd_table <- add_ipd_risktable(dft, risk_table,"month")
   expect_equal(dim(ipd_table),c(3,17))
   expect_identical(class(ipd_table$ipd), c("list"))

@@ -151,7 +151,7 @@ make_df_kmdata <- function(ttf_table){
 
 
 add_km <- function(ttf_table,km_input_files,unit_time = "month"){
-
+  ttf_table <- ttf_table[-which(colnames(ttf_table) %in% c("km_data","ipd","ipd_type"))]
   if(!is.null(km_input_files)){
     excl <- km_input_files
     excl$km_data = sapply(excl$datapath,function(x) list(km_clean_month(read.csv(x),unit_time)))
@@ -288,6 +288,8 @@ clean_risktable_vector <- function(xv){
 
 
 add_ipd_upload <- function(final_data,ipd_input_files){
+  final_data <- final_data[-which(colnames(final_data) %in% c("km_data","ipd","ipd_type"))]
+  
   if(!is.null(ipd_input_files)){
     excl <- ipd_input_files
     excl$ipd = sapply(excl$datapath,function(x) list(read.csv(x)))
