@@ -28,6 +28,15 @@ test_input$outcome <- ""
 test_input$Action <- shinyInput(actionButton, nrow(test_input), 'button_', label = "Add Outcome", onclick = 'Shiny.onInputChange(\"select_button\",  this.id)' )
 colnames(test_input) <- c("NCT","Title","Outcome","Action")
 
+
+trial_con_db <-   dbConnect(
+  duckdb::duckdb(),
+  dbdir = file.path(here::here(), "ctgov-snaps/trial-input2.duckdb"),
+  read_only = FALSE
+)
+
+
+
 ui <- navbarPage('MetaTool Entry',
                  id = "inTabset",
                  collapsible = TRUE,
@@ -139,7 +148,7 @@ server <- function(input, output, session) {
     for (row_id in seq(1:nrow(combined_df))){
       doce_outcome_list <- make_doce_outcome(combined_df[row_id,],input_info)
       single_trial <- make_trial(input_info,doce_outcome_list,pub,trial_value)
-      write_trial(single_trial, trial_con())
+      write_trial(single_trial, trial_con_db)
     }
     
     updateTabsetPanel(session, "inTabset",

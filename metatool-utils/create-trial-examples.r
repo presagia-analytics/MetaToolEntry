@@ -144,12 +144,29 @@ test_trial <- trial("NCT1234", disease = "None", line = "First", phase = "3",
                     publication = pub,
                     nickname = "test trial")
 
-single_trial <- trial("NCT1111", disease = "None", line = "2", phase = "3",
+single_trial <- trial("NCT4444", disease = "None", line = "3", phase = "4",
                     outcome = all_tmp,
                     publication = doce_pub,
                     nickname = "test trial")
-trial_con_db <- trial_con()
 
-write_trial(single_trial, )
+single_trial <- trial("NCT2222", disease = "None", line = "2", phase = "3",
+                      outcome = all_tmp,
+                      publication = doce_pub,
+                      nickname = "test trial")
+
+trial_con_db <-   dbConnect(
+  duckdb::duckdb(),
+  dbdir = file.path(here::here(), "ctgov-snaps/trial-input2.duckdb"),
+  read_only = FALSE
+)
+
+
+DBI::dbDisconnect(trial_con_db)
+dbListTables(trial_con_db)
+tbl(trial_con_db, "categorical_outcome")
+write_trial(single_trial, trial_con_db)
 write_trial(single_trial, con )
+tbl(trial_con_db, "trial")
+tbl(trial_con_db, "survival_outcome")
+
 
