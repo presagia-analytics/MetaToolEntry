@@ -49,14 +49,19 @@ ui_ttf <- function(id) {
     ),
     hr(),
     h4(strong("Patient Level Data Generator")),
-    h5("If you do not have PID data, you can generate IPD data using this section."),
+    h5("If you do not have PID data, you can generate IPD data in this section.There are two types of methods for generating IPD data."),
+    h5(strong("Generate from Risk Table")),
+    h5("The most accurate method is to use the risk table from the survival figure. You must upload the KM-curve data and complete the risk table below."),
+    h5(strong("Generate from Estimated Median Survival")),
+    h5("If you don't have risk table or KM-curve data, you can retrieve the IPD data by using the estimated median survival, which requires the total number of patients, the number of events, and the estimated median survival. If you don't know how many events there are, the default is 70% of the total number of patients."),
     br(),
     h5(strong("Number at Risk Table:")),
     fluidRow(column(12,rHandsontableOutput(ns("risk_table")))),
     fluidRow(
-      column(3,verticalLayout(actionButton(ns("show_risktable"), "Use Risk Table"))),
-      column(3,verticalLayout(actionButton(ns("use_median"), "Use Risk Table"))),
-      column(3,verticalLayout(actionButton(ns("add_ipd"), "Save IPD Data")))),
+      column(3,verticalLayout(actionButton(ns("use_risktable"), "Use Risk Table"))),
+      column(3,verticalLayout(actionButton(ns("use_median"), "Use Median Survival")))#,
+      #column(3,verticalLayout(actionButton(ns("add_ipd"), "Save IPD Data")))
+      ),
     h5(strong("IPD Table (Treatment combined):")),
     fluidRow(column(12,rHandsontableOutput(ns("ipd_table"))))
   )
@@ -191,7 +196,7 @@ server_ttf <- function(id, app_values) {
 
       #-----
       # IPD generator
-      risk_table_gen <- eventReactive(input$show_risktable,{
+      risk_table_gen <- eventReactive(input$img_input,{
         make_risk_table(input$img_input$datapath)
       }) 
 
@@ -226,24 +231,26 @@ server_ttf <- function(id, app_values) {
           hot_table(highlightCol = TRUE, highlightRow = TRUE,  rowHeaderWidth = 0, stretchH = 'all') %>%
           hot_col("Treatment",type = "dropdown", source = sort(unique(ttf_table$Treatment))) %>%
           hot_col("Subgroup",type = "dropdown", source = sort(unique(ttf_table$Subgroup))) %>%
-          hot_col("Pathology",type = "dropdown", source = sort(unique(ttf_table$Pathology))) %>%
-          hot_col("Ipd.Name",type = "dropdown", source = c("",input$ipd_input$name) , strict = TRUE) 
+          hot_col("Pathology",type = "dropdown", source = sort(unique(ttf_table$Pathology))) 
 
         out_table
 
       })
 
-      observeEvent(input$"add_ipd",{
+      observeEvent(input$use_risktable,{
         final_data <- isolate(ttf_values[[ns('final_data')]])
         risk_table <- isolate(ttf_values[[ns("risk_table")]])
-        #browser()
 
-        final_data <- add_ipd(final_data, risk_table, input$ipd_input, input$unit_time)
+        final_data <- add_ipd_risktable(final_data, risk_table, input$ipd_input, input$unit_time)
 
         ttf_values[[ns('final_data')]] <- make_final_table(final_data, ns)
         ttf_values[[ns('ipd_table')]] <- do.call(rbind,final_data$ipd)
         gargoyle::trigger("make_ipd")
       })
+      
+      
+      
+      
 
       output$ipd_table <- renderRHandsontable({
         gargoyle::watch("make_ipd")

@@ -21,38 +21,8 @@ test_that("test create table", {
 
 dfc <- create_cat_table(3)
 dfn <- create_num_table(3)
-dft <- create_ttf_table(3)
+load(file.path(here::here(),"/tests_data/ttf_module_data.RData"))
 
-dft$Treatment <- c("Docetaxel","Nivolumab","Nivolumab")
-dft$Subgroup  <- c("squamous","squamous","non-squamous")
-dft$Pathology <- c("2","3","4")
-dft$N <- c("135", "137","250")
-dft$No.Event <- c("70","50","50")
-dft$Est.Median <- c("5.99","11.15", "9.14")
-dft$Fup.Median<- c("24", "24", "13")
-dft$KM.Data <- c("NSCLC01642004_docetaxel.csv","NSCLC01642004_nivolumab.csv","NSCLC01673867_docetaxel.csv")
-dft$IPD.Data = c("","ipd_example1.csv","ipd_example2.csv")
-
-km_input_files <- data.frame(name = c("NSCLC01642004_docetaxel.csv","NSCLC01642004_nivolumab.csv"),
-                             size = c("2619, 2573"),
-                             type = c("application/vnd.ms-excel","application/vnd.ms-excel"),
-                             datapath = c(file.path(here::here(), "example/NSCLC01642004_docetaxel.csv"),
-                                          file.path(here::here(), "example/NSCLC01642004_nivolumab.csv")))
-
-ipd_input_files <- data.frame(name = c("ipd_example1.csv","ipd_example2.csv"),
-                             size = c("2619, 2573"),
-                             type = c("text/csv","text/csv"),
-                             datapath = c(file.path(here::here(), "tests_data/ipd_example1.csv"),
-                                          file.path(here::here(), "tests_data/ipd_example2.csv")))
-
-
-risk_table <- tibble::tibble(
-  Treatment = c("Time (in original unit)","Docetaxel","Nivolumab"),
-  Subgroup  = c("","squamous","squamous"),
-  Pathology = c("","2","3"),
-  "Value (Separate numbers by blank space)" = c("0 3 6 9 12 15 18 21 24","135 113 86 69 52 31 15 7 0","137 103 68 45 30 14 7 2 0"),
-  
-  )
 
 test_that("make_final_table", {
   # this function will not be used for databd
@@ -113,32 +83,31 @@ test_that("Test KMplot from median", {
 })
 
 test_that("Test KMplot from km data", {
-  dft$km_data <- SourceData$os.data[1:3]
-  dft_km <- make_df_kmdata(dft)
+  
+  dft_km <- make_df_kmdata(dft_final)
   expect_identical(colnames(dft_km),c( "treatment","timess", "valuess"))
   expect_equal(dim(dft_km),c(269, 3))
 
   p <- make_survplot(dft_km)
   expect_error(print(p), NA)
 
-  expect_identical(use_km_data(NULL,dft$KM.Data), FALSE)
-  expect_identical(use_km_data("A path",dft$KM.Data), TRUE)
+  expect_identical(use_km_data(NULL,dft_final$KM.Data), FALSE)
+  expect_identical(use_km_data("A path",dft_final$KM.Data), TRUE)
   expect_identical(use_km_data("A path",c("", "","b")), TRUE)
   expect_identical(use_km_data(NULL,c("", "","")), FALSE)
   expect_identical(use_km_data("A path",c("", "","")), FALSE)
 })
 
 test_that("from table to plot",{
-  dft$km_data <- SourceData$os.data[1:3]
-
-  p <- table2survplot(dft,km_input_files)
+  
+  p <- table2survplot(dft_final,km_input_files)
   expect_error(print(p), NA)
 
-  p <- table2survplot(dft,NULL)
+  p <- table2survplot(dft_final,NULL)
   expect_error(print(p), NA)
 
-  dft$KM.Data <- ""
-  p <- table2survplot(dft,km_input_files)
+  dft_final$KM.Data <- ""
+  p <- table2survplot(dft_final,km_input_files)
   expect_error(print(p), NA)
 
 })
@@ -197,10 +166,10 @@ test_that("get risk table from image",{
   expect_identical(test_df[[1]][1], c("time 0 3 6 9 12 15 18 21 24"))
 
   test_df <- make_risk_table(img_input)
-  expect_equal(dim(test_df),c(3,5))
+  expect_equal(dim(test_df),c(3,4))
 
   test_df <- make_risk_table(NULL)
-  expect_equal(dim(test_df),c(1,5))
+  expect_equal(dim(test_df),c(1,4))
   expect_identical(test_df$`Value (Separate numbers by blank space)`, c("Can't get the risk table"))
 
 })

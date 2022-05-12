@@ -220,7 +220,6 @@ make_risk_table <- function(img_input){
     risk_table <- risk_table[c("Treatment","Subgroup","Pathology","Value (Separate numbers by blank space)")]
     risk_table$Treatment[1] = "Time (in original unit)"
   }
-  risk_table$Ipd.Name <- ""
   risk_table
 }
 
@@ -300,7 +299,7 @@ add_ipd_upload <- function(final_data,ipd_input_files){
 
 add_ipd_risktable <- function(final_data ,risk_table, unit_time){
   #browser()
-  colnames(final_data) <- c(colnames(create_ttf_table(1)),"km_data")
+  #colnames(final_data) <- c(colnames(create_ttf_table(1)),"km_data")
   final_data$ipd <- vector(mode = "list", length = nrow(final_data))
   if(!is.null(risk_table)){
     risk_table <- clean_risktable(risk_table)
@@ -314,7 +313,8 @@ add_ipd_risktable <- function(final_data ,risk_table, unit_time){
     final_data$ipd[seq_id] =  lapply(seq_id, function(x) {
       get_ipd_risktable(risk_time, final_data[x,]$value[[1]], final_data[x,]$km_data[[1]], arm.id= final_data[x,]$Treatment, subgroup.id = final_data[x,]$Subgroup, Pathology.id = final_data[x,]$Pathology)
     })
-    final_data <- final_data[c(colnames(create_ttf_table(1)),"km_data","ipd")]
+    final_data$ipd_type[which(!sapply(final_data$ipd,is.null))] <- "risk_table"
+    final_data <- final_data[-which(colnames(final_data) %in% c("Value (Separate numbers by blank space)", "value"  ))]
   }
 
   seq_median_id <- which(sapply(final_data$ipd,is.null))
