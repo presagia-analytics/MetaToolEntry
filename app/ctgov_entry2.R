@@ -3,6 +3,7 @@ library(DT)
 library(rhandsontable)
 library(gargoyle)
 library(ggplot2)
+library(dplyr)
 
 test_input_org <- readRDS("C:/Users/Preadmin/OneDrive - Telperian/Github/ctrialsgovshiny/data/test_input.RDS")
 show_col <- c('nct_id', 'official_title')
@@ -155,7 +156,10 @@ server <- function(input, output, session) {
                       selected = "panel1")
   })
   
-  
+  session$onSessionEnded(function() {
+    DBI::dbDisconnect(trial_con_db)
+    stopApp()
+  })
 }
 
 shinyApp(ui, server)

@@ -32,7 +32,7 @@ survival_curve <- function(x) {
 
 make_outcome <- function(x, table_names, add_class) {
   # todo: Should types be checked?
-  #browser()
+
   assert(
     check_data_frame(x),
     ncol(x) == length(table_names),
@@ -60,6 +60,7 @@ survival_figures <- function(x) {
 
 survival_outcome <- function(x) {
   table_names <-colnames(x)
+
 
   add_class <- c("survival_outcome", "outcome")
   x <- make_outcome(x, table_names, add_class)
@@ -329,7 +330,7 @@ write_outcome.survival_outcome <- function(x, con, verbose = FALSE, ...) {
     db_copy_to(con, "survival_outcome", as_tibble(xs[c(),]),
                temporary = FALSE)
   }
-  #browser()
+
   db_surv_out <- tbl(con, "survival_outcome")
   sync_table(db_surv_out, xs, 
              by = c("trial_id", "survival_type", "time_unit", 

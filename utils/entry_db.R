@@ -18,7 +18,7 @@ make_doce_pub <- function(input_info){
 }
 
 make_doce_outcome <- function(combined_df_row,input_info){
-  
+
   outcome_names_all <- stringr::str_remove(colnames(combined_df_row)[grepl('\\b.N\\b',colnames(combined_df_row))], ".N")
   surv_names <- outcome_names_all[which(outcome_names_all %in% c("os","pfs"))]
   cat_names <- outcome_names_all[which(outcome_names_all %in% c("RECIST","Resp"))]
@@ -56,8 +56,7 @@ extract_outcome <- function(outcome_name,combined_df_row){
 }
 
 make_surv_outcome <- function(outcome_name,combined_df_row,input_info){
-  #browser()
-  
+
   ttf_table <- extract_outcome(outcome_name,combined_df_row)
   
   assert(
@@ -95,7 +94,7 @@ make_surv_outcome <- function(outcome_name,combined_df_row,input_info){
 }
 
 make_doce_surv_curve <- function(km_dataframe){
-  if(!is.null(km_dataframe )){
+  if(!is.na(km_dataframe )){
     doce_surv <- km_dataframe |>  ## im_data must be data.frame
       survival_curve()
   }else{
