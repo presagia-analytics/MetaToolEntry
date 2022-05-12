@@ -6,20 +6,23 @@ ui_ttf <- function(id) {
     h4(strong("Trial Information")),
     fluidRow(
       column(
-        width = 6,
+        width = 4,
         numericInput(ns("n_arms"), label = h5(strong("Number of Cohorts:")), 7, min = 1, max = 100)),
       column(
-        width = 6,
+        width = 4,
         selectInput(ns("unit_time"), label = h5(strong("Unit of Time in the Study:")), c("month","week","year","day")))
     ),
 
     fluidRow(
       column(
-        width = 6,
+        width = 4,
         fileInput(ns("img_input"), h5(strong("Upload Figure:")), accept = c('image/png', 'image/jpeg'))),
       column(
-        width = 6,
-        fileInput(ns("excel_input"),  h5(strong('Upload KM Data:')), accept = c('.csv'),multiple = TRUE))
+        width = 4,
+        fileInput(ns("excel_input"),  h5(strong('Upload KM Data:')), accept = c('.csv'),multiple = TRUE)),
+      column(
+        width = 4,
+        fileInput(ns("ipd_input"),  h5(strong('Upload IPD Data:')), accept = c('.csv'),multiple = TRUE))
     ),
     rHandsontableOutput(ns("ttf_table")),
     br(),
@@ -45,12 +48,8 @@ ui_ttf <- function(id) {
       )
     ),
     hr(),
-    h4(strong("Patient Level Data")),
-    fluidRow(
-      column(
-        width = 6,
-        fileInput(ns("pid_input"),  h5(strong('Upload PID Data:')), accept = c('.csv'),multiple = TRUE))
-    ),
+    h4(strong("Patient Level Data Generator")),
+
     h5(strong("Number at Risk Table:")),
     fluidRow(column(12,rHandsontableOutput(ns("risk_table")))),
     fluidRow(
@@ -98,17 +97,27 @@ server_ttf <- function(id, app_values) {
 
       observeEvent(input$save_table,{
           tmp_df <- isolate(ttf_values[[ns("ttf_table")]])
+          rhandtable <- tmp_df
           
           tmp_df$km_data <- NA
           tmp_df$ipd <- NA
+          tmp_df$ipd_type <- NA
+          tmp_df$fig_path <- NA
           
-          rhandtable <- tmp_df
           if(!is.null(input$excel_input)){
-            tmp_df <- tmp_df %>%
-            add_km(input$excel_input, input$unit_time) %>%
-            update_median()
-            rhandtable  <- tmp_df[-which(colnames(tmp_df)%in% c("km_data","ipd"))]
+            tmp_df <- 
+              tmp_df %>%
+                add_km(input$excel_input, input$unit_time) %>%
+                update_median()
+                rhandtable  <- tmp_df[-which(colnames(tmp_df)%in% c("km_data","ipd"))]
           }
+          
+          if(!is.null(input$ipd_input)){
+            tmp_df <- 
+              tmp_df %>%
+              add_ipd_upload(input$ipd_input)
+          }
+          
           if(!is.null(input$img_input)){
             tmp_df$fig_path <- input$img_input$datapath
           }
@@ -159,8 +168,9 @@ server_ttf <- function(id, app_values) {
           hot_col(col = "ID", readOnly = TRUE) %>%
           hot_col("Treatment",type = "autocomplete", source = tr_sub_list$Treatment , strict = FALSE) %>%
           hot_col("Subgroup",type = "autocomplete", source = tr_sub_list$Subgroup , strict = FALSE) %>%
-          hot_col("KM.Excel.Name",type = "dropdown", source = c("",input$excel_input$name) , strict = TRUE)%>%
-          hot_col("Pathology",type = "autocomplete", source = tr_sub_list$Pathology, strict = FALSE)
+          hot_col("Pathology",type = "autocomplete", source = tr_sub_list$Pathology, strict = FALSE) %>%
+          hot_col("KM.Data",type = "dropdown", source = c("",input$excel_input$name) , strict = TRUE) %>%
+          hot_col("IPD.Data",type = "dropdown", source = c("",input$ipd_input$name) , strict = TRUE)
         
         out_table
       })
@@ -202,7 +212,7 @@ server_ttf <- function(id, app_values) {
           hot_col("Treatment",type = "dropdown", source = sort(unique(ttf_table$Treatment))) %>%
           hot_col("Subgroup",type = "dropdown", source = sort(unique(ttf_table$Subgroup))) %>%
           hot_col("Pathology",type = "dropdown", source = sort(unique(ttf_table$Pathology))) %>%
-          hot_col("Ipd.Name",type = "dropdown", source = c("",input$pid_input$name) , strict = TRUE) 
+          hot_col("Ipd.Name",type = "dropdown", source = c("",input$ipd_input$name) , strict = TRUE) 
 
         out_table
 
@@ -213,7 +223,7 @@ server_ttf <- function(id, app_values) {
         risk_table <- isolate(ttf_values[[ns("risk_table")]])
         #browser()
 
-        final_data <- add_ipd(final_data, risk_table, input$pid_input, input$unit_time)
+        final_data <- add_ipd(final_data, risk_table, input$ipd_input, input$unit_time)
 
         ttf_values[[ns('final_data')]] <- make_final_table(final_data, ns)
         ttf_values[[ns('ipd_table')]] <- do.call(rbind,final_data$ipd)

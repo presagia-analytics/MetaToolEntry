@@ -30,11 +30,11 @@ test_input$Action <- shinyInput(actionButton, nrow(test_input), 'button_', label
 colnames(test_input) <- c("NCT","Title","Outcome","Action")
 
 
-trial_con_db <-   dbConnect(
-  duckdb::duckdb(),
-  dbdir = file.path(here::here(), "ctgov-snaps/trial-input2.duckdb"),
-  read_only = FALSE
-)
+# trial_con_db <-   dbConnect(
+#   duckdb::duckdb(),
+#   dbdir = file.path(here::here(), "ctgov-snaps/trial-input2.duckdb"),
+#   read_only = FALSE
+# )
 
 
 

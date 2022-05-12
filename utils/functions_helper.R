@@ -16,7 +16,8 @@ create_ttf_table <- function(num_arm){
                    HR = "",
                    HR.95CIL = "",
                    HR.95CIU = "",
-                   KM.Excel.Name = "",
+                   KM.Data = "",
+                   IPD.Data = "",
                    stringsAsFactors=FALSE)
   df
 }
@@ -107,9 +108,9 @@ adjust_col <- function(dtable,cat_level_name){
 table2survplot <- function(ttf_table, excel_input){
 
   if(!is.null(ttf_table)){
-    if(use_km_data(excel_input, ttf_table$KM.Excel.Name)){
+    if(use_km_data(excel_input, ttf_table$KM.Data)){
       try(make_survplot(make_df_kmdata(ttf_table)))
-    }else if(use_median(excel_input, ttf_table$KM.Excel.Name, ttf_table$Est.Median)){
+    }else if(use_median(excel_input, ttf_table$KM.Data, ttf_table$Est.Median)){
       make_survplot(make_df_median(ttf_table))
     }
   }
@@ -140,7 +141,7 @@ use_km_data <- function(excel_input,excel_name){
 }
 
 make_df_kmdata <- function(ttf_table){
-  plot_id <- which(ttf_table$KM.Excel.Name != "")
+  plot_id <- which(ttf_table$KM.Data != "")
   dff = NULL
   for (iid in plot_id){
     dff = rbind(dff,data.frame(treatment = paste0(ttf_table$Treatment[iid],"_",ttf_table$Subgroup[iid]), timess = ttf_table$km_data[[iid]]$time, valuess = ttf_table$km_data[[iid]]$surv))
@@ -148,12 +149,13 @@ make_df_kmdata <- function(ttf_table){
   dff
 }
 
+
 add_km <- function(ttf_table,km_input_files,unit_time = "month"){
 
   if(!is.null(km_input_files)){
     excl <- km_input_files
     excl$km_data = sapply(excl$datapath,function(x) list(km_clean_month(read.csv(x),unit_time)))
-    ttf_table <- dplyr::left_join(ttf_table, excl[c("name","km_data")], by = c("KM.Excel.Name" = "name"))
+    ttf_table <- dplyr::left_join(ttf_table, excl[c("name","km_data")], by = c("KM.Data" = "name"))
   }
   ttf_table
 }
@@ -188,7 +190,7 @@ update_median <- function(ttf_table){
   if(!is.null(ttf_table)){
     ttf_table %>%
       dplyr::rowwise() %>%
-      dplyr::mutate(Est.Median = ifelse(KM.Excel.Name != "" & Est.Median == "",
+      dplyr::mutate(Est.Median = ifelse(KM.Data != "" & Est.Median == "",
                                               get_ttf_median(km_data),
                                               Est.Median
       ))}}
@@ -275,28 +277,24 @@ clean_risktable_vector <- function(xv){
   sep_xv[which(!is.na(sep_xv))]
 }
 
-add_ipd <- function(final_data, risk_table,ipd_input_files,unit_time = "month"){
-  
-  if( any(risk_table$Ipd.Name != "")){
-    ipd_table <- add_ipd_upload(final_data, risk_table,ipd_input_files)
-  }else{
-    ipd_table <- add_ipd_risktable(final_data, risk_table, unit_time)
-  }
-  ipd_table
-}
+# add_ipd <- function(final_data, risk_table,ipd_input_files,unit_time = "month"){
+#   
+#   if( any(risk_table$Ipd.Name != "")){
+#     ipd_table <- add_ipd_upload(final_data, risk_table,ipd_input_files)
+#   }else{
+#     ipd_table <- add_ipd_risktable(final_data, risk_table, unit_time)
+#   }
+#   ipd_table
+# }
 
 
-add_ipd_upload <- function(final_data, risk_table,ipd_input_files){
+add_ipd_upload <- function(final_data,ipd_input_files){
   if(!is.null(ipd_input_files)){
     excl <- ipd_input_files
     excl$ipd = sapply(excl$datapath,function(x) list(read.csv(x)))
-    risk_table <- dplyr::left_join(risk_table, excl[c("name","ipd")], by = c("Ipd.Name" = "name"))
-    final_data <- dplyr::left_join(final_data,
-                                   risk_table[c("Treatment","Subgroup","Pathology","ipd")],
-                                   by = c("Treatment","Subgroup","Pathology"))
+    final_data <- dplyr::left_join(final_data, excl[c("name","ipd")], by = c("IPD.Data" = "name"))
     }
   final_data
-  
 }
 
 add_ipd_risktable <- function(final_data ,risk_table, unit_time){
