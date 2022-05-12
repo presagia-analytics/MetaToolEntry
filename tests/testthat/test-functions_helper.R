@@ -130,7 +130,6 @@ test_that("convert and clean km time", {
 })
 
 test_that("convert and clean km time", {
-  
   ## test normal cases
   test_df <- add_km(dft_final_ep,km_input_files)
   expect_equal(dim(test_df),c(3,17))
@@ -196,7 +195,6 @@ test_that("test upload ipd",{
 test_that("calcaute ipd from risk table",{
   risk_time <- c(0 , 3 , 6  ,9, 12, 15, 18 ,21, 24)
   risk_number <- c(135, 113 , 86,  69,  52 , 31,  15 ,  7 ,  0)
-  dft$km_data <- SourceData$os.data[1:3]
 
   ipd_test <- get_ipd_risktable(risk_time, risk_number, dft_final$km_data[[1]])
   expect_equal(dim(ipd_test),c(135,5))
@@ -217,13 +215,13 @@ test_that("calcaute ipd from median survival",{
 test_that("calcaute ipd from risk table",{  
   
   ## null risk table
-  ipd_table <- add_ipd_risktable(dft, risk_table,"month")
-  expect_equal(dim(ipd_table),c(3,17))
+  ipd_table <- add_ipd_risktable(dft_final, risk_table,"month")
+  expect_equal(dim(ipd_table),c(3,19))
   expect_identical(class(ipd_table$ipd), c("list"))
   expect_false(all(sapply(ipd_table$ipd, is.null)))
 
-  ipd_table2 <- add_ipd_risktable(dft, NULL,"month")
-  expect_equal(dim(ipd_table2),c(3,17))
+  ipd_table2 <- add_ipd_risktable(dft_final, NULL,"month")
+  expect_equal(dim(ipd_table2),c(3,19))
   expect_identical(class(ipd_table2$ipd), c("list"))
   expect_false(all(sapply(ipd_table2$ipd, is.null)))
 
@@ -231,26 +229,6 @@ test_that("calcaute ipd from risk table",{
   p <-make_ipd_figure(ipd_plot_table)
   expect_error(print(p), NA)
 })
-
-# test_that("test get ipd from upload or from risktable",{
-#   # from upload 
-#   
-#   ipd_table <- add_ipd(dft, risk_table,ipd_input_files, "month")
-#   expect_equal(dim(ipd_table),c(3,16))  #note, 16 is without km_data
-#   expect_true(is.null(ipd_table$ipd[3][[1]]))
-#   expect_false(is.null(ipd_table$ipd[2][[1]]))
-#   
-#   #from risk table
-#   risk_table$Ipd.Name <- ""
-#   dft$km_data <- SourceData$os.data[1:3]
-# 
-#   ipd_table2 <- add_ipd(dft, risk_table,ipd_input_files,"month")
-#   expect_equal(dim(ipd_table2),c(3,17))
-#   expect_identical(class(ipd_table2$ipd), c("list"))
-#   expect_false(all(sapply(ipd_table2$ipd, is.null)))
-#   
-# })
-
 
 test_that("merge outcome",{
   tab_df1 <- data.frame(ID = c(1,2,3),
@@ -326,3 +304,4 @@ test_that("merge_trial_info",{
   expect_equal(test_df$trial_info[1],"Y1234CancerTypeP2TL2Docetaxel-squamous")
 
 })
+

@@ -53,14 +53,14 @@ ui_ttf <- function(id) {
     h5(strong("Generate from Risk Table")),
     h5("The most accurate method is to use the risk table from the survival figure. You must upload the KM-curve data and complete the risk table below."),
     h5(strong("Generate from Estimated Median Survival")),
-    h5("If you don't have risk table or KM-curve data, you can retrieve the IPD data by using the estimated median survival, which requires the total number of patients, the number of events, and the estimated median survival. If you don't know how many events there are, the default is 70% of the total number of patients."),
+    h5("If you don't have risk table or KM-curve data, the IPD data will get from the estimated median survival, which requires the total number of patients, the number of events, and the estimated median survival. If you don't know how many events there are, the default is 70% of the total number of patients."),
     br(),
     h5(strong("Number at Risk Table:")),
     fluidRow(column(12,rHandsontableOutput(ns("risk_table")))),
     fluidRow(
-      column(3,verticalLayout(actionButton(ns("use_risktable"), "Use Risk Table"))),
-      column(3,verticalLayout(actionButton(ns("use_median"), "Use Median Survival")))#,
-      #column(3,verticalLayout(actionButton(ns("add_ipd"), "Save IPD Data")))
+      #column(3,verticalLayout(actionButton(ns("use_risktable"), "Use Risk Table")))#,
+      #column(3,verticalLayout(actionButton(ns("use_median"), "Use Median Survival")))#,
+      column(3,verticalLayout(actionButton(ns("add_ipd"), "Save IPD Data")))
       ),
     h5(strong("IPD Table (Treatment combined):")),
     fluidRow(column(12,rHandsontableOutput(ns("ipd_table"))))

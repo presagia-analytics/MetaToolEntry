@@ -323,6 +323,7 @@ add_ipd_risktable <- function(final_data ,risk_table, unit_time){
   final_data$ipd[seq_median_id]  = lapply(seq_median_id, function(x) {
     get_ipd_median(final_data[x,]$Est.Median, final_data[x,]$No.Event, final_data[x,]$N, arm.id= final_data[x,]$Treatment, subgroup.id = final_data[x,]$Subgroup)
   })
+  final_data$ipd_type[seq_median_id] <- "median"
   final_data
 }
 
