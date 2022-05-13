@@ -56,7 +56,6 @@ extract_outcome <- function(outcome_name,combined_df_row){
 }
 
 make_surv_outcome <- function(outcome_name,combined_df_row,input_info){
-
   ttf_table <- extract_outcome(outcome_name,combined_df_row)
   
   assert(
@@ -94,7 +93,7 @@ make_surv_outcome <- function(outcome_name,combined_df_row,input_info){
 }
 
 make_doce_surv_curve <- function(km_dataframe){
-  if(!is.na(km_dataframe )){
+  if(!is.null(km_dataframe )){
     doce_surv <- km_dataframe |>  ## im_data must be data.frame
       survival_curve()
   }else{
