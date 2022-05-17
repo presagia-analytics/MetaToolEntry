@@ -8,9 +8,6 @@ combined_df <- readRDS(file.path(here::here(),"/tests_data/combined_df_all.RDS")
 input_info <- readRDS(file.path(here::here(),"/tests_data/input_info.RDS"))
 input_info$pdf_input$datapath <- file.path(here::here(),"/example/1_Nivolumab versus Docetaxel.pdf")
 
-ex_nokm <- readRDS(file.path(here::here(),"/tests_data/ex_nokm.RDS"))
-
-
 test_that("make_doce_pub",{
   doce_pub <- make_doce_pub(input_info)
   expect_equal(dim(doce_pub),c(1, 5))

@@ -14,7 +14,7 @@ trial_con <- function() {
 
 ctgov_con <- function() {
   dbConnect(
-    duckdb(),
+    duckdb::duckdb(),
     dbdir = file.path(here::here(), "ctgov-snaps/ctgov.duckdb"),
     read_only = TRUE
   )
@@ -144,23 +144,22 @@ test_trial <- trial("NCT1234", disease = "None", line = "First", phase = "3",
                     publication = pub,
                     nickname = "test trial")
 
+
+write_trial(test_trial, trial_con())
+
 single_trial <- trial("NCT4444", disease = "None", line = "3", phase = "4",
                     outcome = all_tmp,
                     publication = doce_pub,
                     nickname = "test trial")
 
-single_trial <- trial("NCT2222", disease = "None", line = "2", phase = "3",
+single_trial <- trial("NCT051603", disease = "None", line = "2", phase = "3",
                       outcome = all_tmp,
-                      publication = doce_pub,
+                      publication = pub,
                       nickname = "test trial")
 
-trial_con_db <-   dbConnect(
-  duckdb::duckdb(),
-  dbdir = file.path(here::here(), "ctgov-snaps/trial-input2.duckdb"),
-  read_only = FALSE
-)
 
 
+write_trial(single_trial, trial_con())
 DBI::dbDisconnect(trial_con_db)
 dbListTables(trial_con_db)
 tbl(trial_con_db, "categorical_outcome")
