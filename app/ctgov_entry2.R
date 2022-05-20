@@ -157,6 +157,7 @@ server <- function(input, output, session) {
   
   session$onSessionEnded(function() {
     DBI::dbDisconnect(trial_con_db)
+    gc()
     stopApp()
   })
 }
