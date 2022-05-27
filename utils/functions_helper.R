@@ -284,6 +284,7 @@ add_ipd_upload <- function(final_data,ipd_input_files){
     excl$ipd = sapply(excl$datapath,function(x) list(read.csv(x)))
     final_data <- dplyr::left_join(final_data, excl[c("name","ipd")], by = c("IPD.Data" = "name"))
   }
+  final_data$ipd_type <- ""
   final_data$ipd_type[which((final_data$IPD.Data != ""))] <- "Upload"
   final_data
 }

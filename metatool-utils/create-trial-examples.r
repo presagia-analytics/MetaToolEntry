@@ -152,7 +152,7 @@ single_trial <- trial("NCT4444", disease = "None", line = "3", phase = "4",
                     publication = doce_pub,
                     nickname = "test trial")
 
-single_trial <- trial("NCT052003", disease = "None", line = "2", phase = "3",
+single_trial <- trial("NCT0523", disease = "None", line = "2", phase = "3",
                       outcome = all_tmp,
                       publication = pub,
                       nickname = "test trial")
@@ -165,7 +165,7 @@ dbListTables(trial_con_db)
 
 trial_con_db <-   dbConnect(
   duckdb::duckdb(),
-  dbdir = file.path(here::here(), "ctgov-snaps/trial-input2.duckdb"),
+  dbdir = file.path(here::here(), "ctgov-snaps/trial-input3.duckdb"),
   read_only = FALSE
 )
   

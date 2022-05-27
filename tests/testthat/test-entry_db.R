@@ -30,9 +30,7 @@ test_that("combine outcomes of the same times",{
 test_that("test survival outcome",{
   tmp <- make_surv_outcome("os",combined_df[1,],input_info)
   expect_true("survival_outcome" %in% class(tmp))
-  
-  tmp2 <- make_surv_outcome("os",ex_nokm,input_info)
-  
+
 })
 
 test_that("test continous outcome",{

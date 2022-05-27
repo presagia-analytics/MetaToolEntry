@@ -141,6 +141,7 @@ server_ttf <- function(id, app_values) {
       
       ## save button
       observeEvent(input$save_table,{
+
           tmp_df <- isolate(ttf_values[[ns("ttf_table")]])
           rhandtable <- tmp_df
           

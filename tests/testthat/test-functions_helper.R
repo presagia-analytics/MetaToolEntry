@@ -132,14 +132,14 @@ test_that("convert and clean km time", {
 test_that("convert and clean km time", {
   ## test normal cases
   test_df <- add_km(dft_final_ep,km_input_files)
-  expect_equal(dim(test_df),c(3,17))
+  expect_equal(dim(test_df),c(3,19))
   expect_identical(test_df$km_data[[3]],NULL)
   
   ## test when only upload one curve, the second curve should be null (shouldn't happen)
   test_df <- add_km(dft_final_ep,km_input_files[1,])
-  expect_equal(dim(test_df),c(3,17))
+  expect_equal(dim(test_df),c(3,19))
   expect_identical(test_df$km_data[[2]],NULL)
-  expect_identical(colnames(test_df )[17], "km_data")
+  expect_identical(colnames(test_df )[19], "km_data")
 
   ## test when there is no upload curve (shouldn't happen)
   test_df <- add_km(dft_final_ep,NULL)
@@ -186,7 +186,7 @@ test_that("clean risk table",{
 
 test_that("test upload ipd",{
   ipd_table <- add_ipd_upload(dft_final, ipd_input_files)
-  expect_equal(dim(ipd_table),c(3,18))  #note, 16 is without km_data
+  expect_equal(dim(ipd_table),c(3,19))  #note, 16 is without km_data
   expect_true(is.null(ipd_table$ipd[1][[1]]))
   expect_false(is.null(ipd_table$ipd[2][[1]]))
 

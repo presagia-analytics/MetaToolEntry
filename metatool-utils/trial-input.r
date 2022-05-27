@@ -377,7 +377,6 @@ write_publication <- function(x, con, verbose = FALSE, ...) {
 
 trial <- function(trial_id, disease, line, phase, outcome, publication, 
                   nickname = NULL) {
-
   assert(
     check_character(trial_id),
     length(trial_id) == 1,

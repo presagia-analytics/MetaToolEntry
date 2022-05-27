@@ -32,7 +32,7 @@ colnames(test_input) <- c("NCT","Title","Outcome","Action")
 
 trial_con_db <-   dbConnect(
   duckdb::duckdb(),
-  dbdir = file.path(here::here(), "ctgov-snaps/trial-input2.duckdb"),
+  dbdir = file.path(here::here(), "ctgov-snaps/trial-input3.duckdb"),
   read_only = FALSE
 )
 
@@ -85,6 +85,9 @@ ui <- navbarPage('MetaTool Entry',
                                   ),
                                   tabPanel("RECIST",
                                            ui_cat ("RECIST")
+                                  ),
+                                  tabPanel("con",
+                                           ui_num ("con")
                                   )
                                 )
                               )
@@ -129,6 +132,7 @@ server <- function(input, output, session) {
   server_ttf(id = "os", entry_value)
   server_ttf(id = "pfs",entry_value)
   server_cat("RECIST",entry_value)
+  server_num("con",entry_value)
   
   output$sel_nct <- renderText({
     trial_value$nct
@@ -141,13 +145,14 @@ server <- function(input, output, session) {
   
   #### Save and back to first Tab
   observeEvent(input$jumpToP1, {
-    browser()
     combined_df <- isolate(entry_value[["all_outcome"]])
     input_info <- reactiveValuesToList(input)
+    
+    pub <- make_doce_pub(input_info)
    
     for (row_id in seq(1:nrow(combined_df))){
       doce_outcome_list <- make_doce_outcome(combined_df[row_id,],input_info)
-      single_trial <- make_trial(input_info,doce_outcome_list,pub,trial_value)
+      single_trial <- make_trial(input_info,doce_outcome_list,pub,trial_value$nct)
       write_trial(single_trial, trial_con_db)
     }
     
