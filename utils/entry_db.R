@@ -191,6 +191,11 @@ make_cat_outcome <- function(outcome_name,combined_df_row,input_info){
 }
 
 make_trial <- function(input_info,doce_outcome_list,pub,nct_number){
+  
+  if(is.null(input_info$Type)){input_info$Type <- ""}
+  if(is.null(input_info$TrLine)){input_info$TrLine <- ""}
+  if(is.null(input_info$Phase)){input_info$Phase <- ""}
+  
   s_trial <- trial(trial_id = nct_number,
                    disease = input_info$Type, 
                    line = input_info$TrLine, 

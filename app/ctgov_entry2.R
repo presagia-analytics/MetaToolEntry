@@ -149,7 +149,7 @@ server <- function(input, output, session) {
     input_info <- reactiveValuesToList(input)
     
     pub <- make_doce_pub(input_info)
-   
+    
     for (row_id in seq(1:nrow(combined_df))){
       doce_outcome_list <- make_doce_outcome(combined_df[row_id,],input_info)
       single_trial <- make_trial(input_info,doce_outcome_list,pub,trial_value$nct)
