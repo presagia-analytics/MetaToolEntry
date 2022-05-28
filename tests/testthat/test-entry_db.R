@@ -56,15 +56,23 @@ test_that("test make_dose_outcome",{
   expect_equal(length(all_tmp),3)
 })
 
-# outcome_list <- make_doce_outcome(combined_df[1,],input_info)
-# make_trial(input_info,outcome_list,doce_pub,"nct111")
-# 
-# 
-# test_that("make_surv_outcome", {
-#   doce_surv_outcome <- make_surv_outcome(ttf_table[1,],"os","month",fig_path)
-#   expect_equal(dim(doce_surv_outcome),c(1, 16))
-#   
-#   expect_identical(c("survival_outcome") %in% class(doce_surv_outcome), TRUE )
-#   
-# })
+test_that("make_trial - take all of the info and make a single trial object for duckdb", {
+  outcome_list <- make_doce_outcome(combined_df[1,],input_info)
+  doce_pub <- make_doce_pub(input_info)
+  
+  single_trial <- make_trial(input_info,outcome_list,doce_pub,"nct111")
+  
+  expect_equal(typeof(single_trial),"list")
+  expect_equal(length(single_trial),7)
+  
+  # test special case of input_info
+  
+  
+  
+  # test special case of outcome_list 
+  
+  
+  # test every NULL case of the input. 
+  
+})
 
