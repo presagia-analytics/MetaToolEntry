@@ -27,9 +27,31 @@ test_that("combine outcomes of the same times",{
 })
 
 
+test_that("make_doce_surv_curve - take km from excel add to survival outcome object",{
+  t1 <- make_doce_surv_curve(combined_df[1,]$`os-km_data`)
+
+  expect_equal(class(t1),c("survival_curve", "data.frame"))
+  expect_equal(nrow(t1), 106)
+  expect_equal(ncol(t1), 2)
+  
+  expect_error(make_doce_surv_curve(combined_df[1,]$`os-km_data`[[1]]))
+  expect_error(make_doce_surv_curve(NA))
+  
+  t2 <- make_doce_surv_curve(vector(mode = "list", length = 1))
+  expect_equal(class(t2), "NULL")
+  expect_equal(t2, NULL)
+  
+})
+
+
 test_that("test survival outcome",{
   tmp <- make_surv_outcome("os",combined_df[1,],input_info)
   expect_true("survival_outcome" %in% class(tmp))
+  expect_equal(nrow(tmp), 1)
+  expect_equal(ncol(tmp), 18)
+  expect_equal(class(tmp$survival_curve),"list")
+  
+  
 
 })
 
@@ -64,6 +86,9 @@ test_that("make_trial - take all of the info and make a single trial object for 
   
   expect_equal(typeof(single_trial),"list")
   expect_equal(length(single_trial),7)
+  
+  ## when each of the outcome is not excist
+  
   
   # test special case of input_info
   

@@ -18,6 +18,7 @@ make_doce_pub <- function(input_info){
 }
 
 make_doce_outcome <- function(combined_df_row,input_info){
+  browser()
 
   outcome_names_all <- stringr::str_remove(colnames(combined_df_row)[grepl('\\b.N\\b',colnames(combined_df_row))], ".N")
   surv_names <- outcome_names_all[which(outcome_names_all %in% c("os","pfs"))]
@@ -65,7 +66,8 @@ make_surv_outcome <- function(outcome_name,combined_df_row,input_info){
   
   unit_time <- input_info[[paste0("os","-unit_time")]]
   
-  km_data_list <- lapply(ttf_table$km_data, make_doce_surv_curve)
+  
+  km_data_list <- make_doce_surv_curve(ttf_table$km_data)
   
   surv_fig_list <- lapply(ttf_table$fig_path, make_doce_surv_fig)
   
@@ -84,7 +86,7 @@ make_surv_outcome <- function(outcome_name,combined_df_row,input_info){
     hazard_ratio = ttf_table$HR,
     hr_95_ci_upper = ttf_table$HR.95CIU,
     hr_95_ci_lower = ttf_table$HR.95CIL,
-    survival_curve = km_data_list,
+    survival_curve = list(km_data_list),
     survival_figures = surv_fig_list,
     survival_ipd = ttf_table$ipd
   ) |>       
@@ -93,8 +95,9 @@ make_surv_outcome <- function(outcome_name,combined_df_row,input_info){
 }
 
 make_doce_surv_curve <- function(km_dataframe){
-  if(!is.null(km_dataframe )){
-    doce_surv <- km_dataframe |>  ## im_data must be data.frame
+  km_data <- km_dataframe[[1]]
+  if(!is.null(km_data)){
+    doce_surv <- km_data |>  
       survival_curve()
   }else{
     doce_surv <- NULL

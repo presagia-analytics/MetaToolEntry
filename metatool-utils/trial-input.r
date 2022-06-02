@@ -64,7 +64,6 @@ survival_outcome <- function(x) {
 
   add_class <- c("survival_outcome", "outcome")
   x <- make_outcome(x, table_names, add_class)
-
   assert(
     length(x$survival_type) == 1,
     x$survival_type %in% c("os", "pfs"),

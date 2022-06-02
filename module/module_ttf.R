@@ -145,7 +145,7 @@ server_ttf <- function(id, app_values) {
           tmp_df <- isolate(ttf_values[[ns("ttf_table")]])
           rhandtable <- tmp_df
           
-          tmp_df$km_data <- NA
+          tmp_df$km_data <- vector(mode = "list", length = nrow(tmp_df))
 
           
           
@@ -157,7 +157,7 @@ server_ttf <- function(id, app_values) {
                 rhandtable  <- tmp_df[-which(colnames(tmp_df)%in% c("km_data","ipd"))]
           }
 
-          tmp_df$ipd <- NA
+          tmp_df$ipd <- vector(mode = "list", length = nrow(tmp_df))
           tmp_df$ipd_type <- NA
           
           if(!is.null(input$ipd_input)){
