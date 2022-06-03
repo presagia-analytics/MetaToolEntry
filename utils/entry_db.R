@@ -18,7 +18,6 @@ make_doce_pub <- function(input_info){
 }
 
 make_doce_outcome <- function(combined_df_row,input_info){
-  browser()
 
   outcome_names_all <- stringr::str_remove(colnames(combined_df_row)[grepl('\\b.N\\b',colnames(combined_df_row))], ".N")
   surv_names <- outcome_names_all[which(outcome_names_all %in% c("os","pfs"))]
@@ -58,7 +57,7 @@ extract_outcome <- function(outcome_name,combined_df_row){
 
 make_surv_outcome <- function(outcome_name,combined_df_row,input_info){
   ttf_table <- extract_outcome(outcome_name,combined_df_row)
-  
+
   assert(
     nrow(ttf_table) == 1,
     combine = "and"
@@ -69,7 +68,7 @@ make_surv_outcome <- function(outcome_name,combined_df_row,input_info){
   
   km_data_list <- make_doce_surv_curve(ttf_table$km_data)
   
-  surv_fig_list <- lapply(ttf_table$fig_path, make_doce_surv_fig)
+  surv_fig_list <- make_doce_surv_fig(ttf_table$fig_path) 
   
   tibble(
     survival_type = ttf_table$outcome_names,           
@@ -87,7 +86,7 @@ make_surv_outcome <- function(outcome_name,combined_df_row,input_info){
     hr_95_ci_upper = ttf_table$HR.95CIU,
     hr_95_ci_lower = ttf_table$HR.95CIL,
     survival_curve = list(km_data_list),
-    survival_figures = surv_fig_list,
+    survival_figures = list(surv_fig_list),
     survival_ipd = ttf_table$ipd
   ) |>       
     survival_outcome() 
@@ -106,7 +105,8 @@ make_doce_surv_curve <- function(km_dataframe){
 }
 
 make_doce_surv_fig <- function(fig_path){
-  if(!is.null(fig_path)){
+
+  if(!is.na(fig_path)){
     doce_figs <-
       tibble(uploaded = read_rawchar_doc(fig_path),
              generated = read_rawchar_doc(fig_path),

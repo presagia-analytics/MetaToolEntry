@@ -5,8 +5,10 @@ source(file.path(here::here(),"metatool-utils/rawchar.r"), encoding = 'UTF-8')
 library(dplyr)
 
 combined_df <- readRDS(file.path(here::here(),"/tests_data/combined_df_all.RDS"))
+combined_df_inc <- readRDS(file.path(here::here(),"/tests_data/combined_df_incomplete.RDS"))
 input_info <- readRDS(file.path(here::here(),"/tests_data/input_info.RDS"))
 input_info$pdf_input$datapath <- file.path(here::here(),"/example/1_Nivolumab versus Docetaxel.pdf")
+# saveRDS(combined_df, file = file.path(here::here(),"/tests_data/combined_df_all.RDS"))
 
 test_that("make_doce_pub",{
   doce_pub <- make_doce_pub(input_info)
@@ -31,8 +33,7 @@ test_that("make_doce_surv_curve - take km from excel add to survival outcome obj
   t1 <- make_doce_surv_curve(combined_df[1,]$`os-km_data`)
 
   expect_equal(class(t1),c("survival_curve", "data.frame"))
-  expect_equal(nrow(t1), 106)
-  expect_equal(ncol(t1), 2)
+  expect_equal(dim(t1), c(106,2))
   
   expect_error(make_doce_surv_curve(combined_df[1,]$`os-km_data`[[1]]))
   expect_error(make_doce_surv_curve(NA))
@@ -41,17 +42,25 @@ test_that("make_doce_surv_curve - take km from excel add to survival outcome obj
   expect_equal(class(t2), "NULL")
   expect_equal(t2, NULL)
   
+  
+  t3 <- make_doce_surv_curve(combined_df_inc[1,]$`os-km_data`)
+  expect_identical(t2, t3)
+  
 })
 
 
 test_that("test survival outcome",{
   tmp <- make_surv_outcome("os",combined_df[1,],input_info)
+   
   expect_true("survival_outcome" %in% class(tmp))
-  expect_equal(nrow(tmp), 1)
-  expect_equal(ncol(tmp), 18)
+  expect_equal(dim(tmp), c(1,19))
   expect_equal(class(tmp$survival_curve),"list")
+  expect_equal(class(tmp$survival_curve[[1]]),c("survival_curve", "data.frame"))
   
-  
+  t2 <- make_surv_outcome("os",combined_df_inc[1,],input_info)
+  expect_equal(dim(t2),dim(tmp))
+  expect_equal(class(t2$survival_curve),"list")
+  expect_equal(class(t2$survival_curve[[1]]),c("survival_curve", "data.frame")) 
 
 })
 
