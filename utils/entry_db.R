@@ -87,7 +87,8 @@ make_surv_outcome <- function(outcome_name,combined_df_row,input_info){
     hr_95_ci_lower = ttf_table$HR.95CIL,
     survival_curve = list(km_data_list),
     survival_figures = list(surv_fig_list),
-    survival_ipd = ttf_table$ipd
+    survival_ipd = ttf_table$ipd,
+    ipd_type = ttf_table$ipd_type
   ) |>       
     survival_outcome() 
   
@@ -105,7 +106,6 @@ make_doce_surv_curve <- function(km_dataframe){
 }
 
 make_doce_surv_fig <- function(fig_path){
-
   if(!is.na(fig_path)){
     doce_figs <-
       tibble(uploaded = read_rawchar_doc(fig_path),
