@@ -165,7 +165,7 @@ dbListTables(trial_con_db)
 
 trial_con_db <-   dbConnect(
   duckdb::duckdb(),
-  dbdir = file.path(here::here(), "ctgov-snaps/trial-input3.duckdb"),
+  dbdir = file.path(here::here(), "ctgov-snaps/trial-input2.duckdb"),
   read_only = FALSE
 )
   
