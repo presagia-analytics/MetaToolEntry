@@ -427,6 +427,7 @@ trial <- function(trial_id, disease, line, phase, outcome, publication,
 }
 
 write_trial <- function(trial, con, verbose = FALSE, ...) {
+  
 
   assert(inherits(trial, "trial"))
 

@@ -3,7 +3,7 @@ library(duckdb)
 
 con <- dbConnect(
   duckdb::duckdb(),
-  dbdir = file.path(here::here(), "ctgov-snaps/trial-input3.duckdb"),
+  dbdir = file.path(here::here(), "ctgov-snaps/trial-input_test.duckdb"),
   read_only=FALSE
 )
 

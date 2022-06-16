@@ -4,6 +4,7 @@ library(rhandsontable)
 library(gargoyle)
 library(ggplot2)
 library(dplyr)
+library(testthat)
 
 test_input_org <- readRDS("C:/Users/Preadmin/OneDrive - Telperian/Github/ctrialsgovshiny/data/test_input.RDS")
 show_col <- c('nct_id', 'official_title')
@@ -32,7 +33,7 @@ colnames(test_input) <- c("NCT","Title","Outcome","Action")
 
 trial_con_db <-   dbConnect(
   duckdb::duckdb(),
-  dbdir = file.path(here::here(), "ctgov-snaps/trial-input3.duckdb"),
+  dbdir = file.path(here::here(), "ctgov-snaps/trial-input_test.duckdb"),
   read_only = FALSE
 )
 
