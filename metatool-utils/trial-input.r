@@ -61,7 +61,6 @@ survival_figures <- function(x) {
 survival_outcome <- function(x) {
   table_names <-colnames(x)
 
-
   add_class <- c("survival_outcome", "outcome")
   x <- make_outcome(x, table_names, add_class)
   assert(
@@ -76,8 +75,14 @@ survival_outcome <- function(x) {
   
   x$outcome_id <- outcome_id
   x$outcome_row_id <- outcome_row_id
-  x$survival_curve[[1]]$outcome_row_id <- outcome_row_id
-  x$survival_figures[[1]]$outcome_id <- outcome_id
+  if(!is.null(x$survival_curve[[1]])){
+    x$survival_curve[[1]]$outcome_row_id <- outcome_row_id
+  }
+  
+  if(!is.null(x$survival_figures[[1]])){
+    x$survival_figures[[1]]$outcome_id <- outcome_id
+  }
+  
   x
 }
 
@@ -264,6 +269,7 @@ sync_table <-
   }
 
   # Get the rows that need updating.
+  
   updated_rows <- inner_join(db_tbl, add_tbl |> select(all_of(by)), 
                              by = by, copy = TRUE)
 
@@ -305,6 +311,8 @@ write_outcome.survival_outcome <- function(x, con, verbose = FALSE, ...) {
 
   # Get the survival curve and sync with the database.
   surv_curve <- x$survival_curve[[1]]
+  #if(!is.null(surv_curve)){
+  
   if ( !("survival_curve" %in% dbListTables(con))) {
     db_copy_to(con, "survival_curve", as_tibble(surv_curve[c(),]),
                temporary = FALSE)
@@ -312,9 +320,11 @@ write_outcome.survival_outcome <- function(x, con, verbose = FALSE, ...) {
   db_surv_curve <- tbl(con, "survival_curve")
  
   sync_table(db_surv_curve, surv_curve, by = "outcome_row_id")
+  #}
 
   # Get the survival figures and sync with the database.
   surv_figs <- x$survival_figures[[1]]
+  #if(!is.null(surv_figs)){
   
   if ( !("survival_figures" %in% dbListTables(con)) ) {
     db_copy_to(con, "survival_figures", as_tibble(surv_figs[c(),]),
@@ -322,13 +332,16 @@ write_outcome.survival_outcome <- function(x, con, verbose = FALSE, ...) {
   }
   db_surv_figs <- tbl(con, "survival_figures")
   db_surv_figs <- sync_table(db_surv_figs, surv_figs, by = "outcome_id")
-
+  #}
+  
   # Remove the list columns and sync with the database.
   xs <- select(x, -survival_curve, -survival_figures)
+  
   if ( !("survival_outcome" %in% dbListTables(con)) ) {
     db_copy_to(con, "survival_outcome", as_tibble(xs[c(),]),
                temporary = FALSE)
   }
+  
 
   db_surv_out <- tbl(con, "survival_outcome")
   sync_table(db_surv_out, xs, 
@@ -414,6 +427,7 @@ trial <- function(trial_id, disease, line, phase, outcome, publication,
 }
 
 write_trial <- function(trial, con, verbose = FALSE, ...) {
+
   assert(inherits(trial, "trial"))
 
   trial$user_name <- user_name()
