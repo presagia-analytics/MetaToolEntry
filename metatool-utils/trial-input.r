@@ -30,6 +30,21 @@ survival_curve <- function(x) {
   x
 }
 
+
+# A ipd_data is a data.frame with time, status,[optional? treatment subgroup] 
+ipd_data <- function(x) {
+  assert(
+    check_data_frame(x),
+    'time' %in% names(x),
+    'status' %in% names(x),
+    combine = "and"
+  )
+  add_class <- "ipd_data"
+  class(x) <- setdiff(class(x), add_class)
+  class(x) <- c(add_class, class(x))
+  x
+}
+
 make_outcome <- function(x, table_names, add_class) {
   # todo: Should types be checked?
 
@@ -267,6 +282,7 @@ sync_table <-
   if (!inherits(db_tbl, "tbl_dbi") || !inherits(db_tbl$ops$x, "ident")) {
     stop("First parameter doesn't look like a tbl_dbi in the database")
   }
+    #browser()
 
   # Get the rows that need updating.
   
@@ -308,7 +324,7 @@ write_outcome.survival_outcome <- function(x, con, verbose = FALSE, ...) {
   # Add the user and group.
   x$user_name <- user_name()
   x$group_name <- group_name()
-
+  #browser()
   # Get the survival curve and sync with the database.
   surv_curve <- x$survival_curve[[1]]
   #if(!is.null(surv_curve)){
@@ -335,7 +351,7 @@ write_outcome.survival_outcome <- function(x, con, verbose = FALSE, ...) {
   #}
   
   # Remove the list columns and sync with the database.
-  xs <- select(x, -survival_curve, -survival_figures)
+  xs <- select(x, -survival_curve, -survival_figures, -survival_ipd)
   
   if ( !("survival_outcome" %in% dbListTables(con)) ) {
     db_copy_to(con, "survival_outcome", as_tibble(xs[c(),]),

@@ -37,25 +37,6 @@ test_that("extract_outcome - get columns of the outcome ",{
 
 test_that("make_doce_surv_curve - take km from excel add to survival outcome object",{
   t1 <- make_doce_surv_curve(combined_df[1,]$`os-km_data`)
-
-  expect_equal(class(t1),c("survival_curve", "data.frame"))
-  expect_equal(dim(t1), c(106,2))
-  
-  expect_error(make_doce_surv_curve(combined_df[1,]$`os-km_data`[[1]]))
-  expect_error(make_doce_surv_curve(NA))
-  
-  t2 <- make_doce_surv_curve(vector(mode = "list", length = 1))
-  expect_equal(class(t2), "NULL")
-  expect_equal(t2, NULL)
-  
-  t3 <- make_doce_surv_curve(combined_df_inc[1,]$`os-km_data`)
-  expect_identical(t2, t3)
-  
-})
-
-
-test_that("make_doce_surv_curve - take km from excel add to survival outcome object",{
-  t1 <- make_doce_surv_curve(combined_df[1,]$`os-km_data`)
   
   expect_equal(class(t1),c("survival_curve", "data.frame"))
   expect_equal(dim(t1), c(106,2))
@@ -71,6 +52,27 @@ test_that("make_doce_surv_curve - take km from excel add to survival outcome obj
   expect_identical(t2, t3)
   
 })
+
+
+test_that("make_doce_ipd_data - tke ipd data and add to ipd_data object",{
+  t1 <- make_doce_ipd_data(combined_df[1,]$`os-ipd`)
+  
+  expect_equal(class(t1),c("ipd_data", "data.frame"))
+  expect_equal(dim(t1), c(45,5))
+  
+  expect_error(make_doce_ipd_data(combined_df[1,]$`os-ipd`[[1]]))
+  expect_error(make_doce_ipd_data(NA))
+  
+  t2 <- make_doce_ipd_data(vector(mode = "list", length = 1))
+  expect_equal(class(t2), "NULL")
+  expect_equal(t2, NULL)
+  
+  t3 <- make_doce_ipd_data(combined_df_inc[1,]$`os-ipd`)
+  expect_identical(t2, t3)
+  
+})
+
+
 
 test_that("make_doce_surv_fig - test save survival fig to database",{
   
@@ -155,16 +157,16 @@ test_that("write_trial - write tiral in to duckdb - perfect cases 1",{
   expect_silent(write_trial(single_trial_cat, test_db))
 })
 
-# test_that("write_trial - write tiral in to duckdb - perfect cases 2",{
-#   
-#   ## survival outcome
-#   outcome_list <- make_doce_outcome(combined_df[1,],input_info)
-#   doce_pub <- make_doce_pub(input_info)
-#   
-#   outcome_list_surv <- outcome_list[[1]]
-#   single_trial_surv <- make_trial(input_info,outcome_list_surv,doce_pub,"nct111")
-#   expect_silent(write_trial(single_trial_surv, test_db))
-# })
+test_that("write_trial - write tiral in to duckdb - perfect cases 2",{
+
+  ## survival outcome
+  outcome_list <- make_doce_outcome(combined_df[1,],input_info)
+  doce_pub <- make_doce_pub(input_info)
+
+  outcome_list_surv <- outcome_list[[1]]
+  single_trial_surv <- make_trial(input_info,outcome_list_surv,doce_pub,"nct111")
+  expect_silent(write_trial(single_trial_surv, test_db))
+})
 
 
 
