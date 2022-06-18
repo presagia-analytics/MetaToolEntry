@@ -4,7 +4,8 @@ CREATE TABLE trial(trial_id STRING,
                    nickname STRING, 
                    disease STRING, 
                    line STRING,
-                   phase STRING
+                   phase STRING,
+                   last_modified_time DATE
                    );
 
 CREATE TABLE publication(trial_id STRING, 

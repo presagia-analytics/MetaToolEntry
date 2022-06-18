@@ -324,6 +324,7 @@ write_outcome.survival_outcome <- function(x, con, verbose = FALSE, ...) {
   # Add the user and group.
   x$user_name <- user_name()
   x$group_name <- group_name()
+  x$last_modified_time <- Sys.time()
   #browser()
   # Get the survival curve and sync with the database.
   surv_curve <- x$survival_curve[[1]]

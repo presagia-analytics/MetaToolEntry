@@ -177,7 +177,7 @@ test_that("write_trial - write tiral in to duckdb - perfect cases 3",{
   doce_pub <- make_doce_pub(input_info)
 
   single_trial <- make_trial(input_info,outcome_list,doce_pub,"nct111")
-  write_trial(single_trial, test_db)
+  expect_silent(write_trial(single_trial, test_db))
 })
 
 
@@ -190,7 +190,7 @@ test_that("write_trial - write tiral in to duckdb (abnormal cases)",{
   doce_pub <- make_doce_pub(input_info)
 
   single_trial <- make_trial(input_info,outcome_list,doce_pub,"nct1122")
-  write_trial(single_trial, test_db)
+  expect_silent(write_trial(single_trial, test_db))
 
 })
 
