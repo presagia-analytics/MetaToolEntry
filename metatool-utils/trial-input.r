@@ -327,7 +327,7 @@ write_outcome.survival_outcome <- function(x, con, verbose = FALSE, ...) {
   #browser()
   # Get the survival curve and sync with the database.
   surv_curve <- x$survival_curve[[1]]
-  #if(!is.null(surv_curve)){
+  if(!is.null(surv_curve)){
   
   if ( !("survival_curve" %in% dbListTables(con))) {
     db_copy_to(con, "survival_curve", as_tibble(surv_curve[c(),]),
@@ -336,11 +336,11 @@ write_outcome.survival_outcome <- function(x, con, verbose = FALSE, ...) {
   db_surv_curve <- tbl(con, "survival_curve")
  
   sync_table(db_surv_curve, surv_curve, by = "outcome_row_id")
-  #}
+  }
 
   # Get the survival figures and sync with the database.
   surv_figs <- x$survival_figures[[1]]
-  #if(!is.null(surv_figs)){
+  if(!is.null(surv_figs)){
   
   if ( !("survival_figures" %in% dbListTables(con)) ) {
     db_copy_to(con, "survival_figures", as_tibble(surv_figs[c(),]),
@@ -348,7 +348,7 @@ write_outcome.survival_outcome <- function(x, con, verbose = FALSE, ...) {
   }
   db_surv_figs <- tbl(con, "survival_figures")
   db_surv_figs <- sync_table(db_surv_figs, surv_figs, by = "outcome_id")
-  #}
+  }
   
   # Remove the list columns and sync with the database.
   xs <- select(x, -survival_curve, -survival_figures, -survival_ipd)

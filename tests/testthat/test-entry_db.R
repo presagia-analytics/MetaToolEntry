@@ -170,32 +170,29 @@ test_that("write_trial - write tiral in to duckdb - perfect cases 2",{
 
 
 
-# test_that("write_trial - write tiral in to duckdb - perfect cases 3",{
-#   
-#   ## all outcome
-#   outcome_list <- make_doce_outcome(combined_df[1,],input_info)
-#   doce_pub <- make_doce_pub(input_info)
-#   
-#   single_trial <- make_trial(input_info,outcome_list,doce_pub,"nct111")
-#   write_trial(single_trial, trial_con_db)
-# })
+test_that("write_trial - write tiral in to duckdb - perfect cases 3",{
+
+  ## all outcome
+  outcome_list <- make_doce_outcome(combined_df[1,],input_info)
+  doce_pub <- make_doce_pub(input_info)
+
+  single_trial <- make_trial(input_info,outcome_list,doce_pub,"nct111")
+  write_trial(single_trial, test_db)
+})
 
 
 
+test_that("write_trial - write tiral in to duckdb (abnormal cases)",{
 
+  ## no surv figure and surv curve
 
-# 
-# test_that("write_trial - write tiral in to duckdb (abnormal cases)",{
-#   
-#   ## perfect cases
-#   
-#   outcome_list <- make_doce_outcome(combined_df_inc[1,],input_info)
-#   doce_pub <- make_doce_pub(input_info)
-#   
-#   single_trial <- make_trial(input_info,outcome_list,doce_pub,"nct111")
-#   write_trial(single_trial, trial_con_db)
-#   
-# })
+  outcome_list <- make_doce_outcome(combined_df_inc[1,],input_info)
+  doce_pub <- make_doce_pub(input_info)
+
+  single_trial <- make_trial(input_info,outcome_list,doce_pub,"nct1122")
+  write_trial(single_trial, test_db)
+
+})
 
 
 
