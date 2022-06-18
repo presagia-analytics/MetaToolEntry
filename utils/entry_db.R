@@ -105,6 +105,17 @@ make_doce_surv_curve <- function(km_dataframe){
   doce_surv
 }
 
+make_doce_ipd_data <- function(ipd_dataframe){
+  ipd_data <- ipd_dataframe[[1]]
+  if(!is.null(ipd_data)){
+    doce_ipd <- ipd_data |>  
+      ipd_data()
+  }else{
+    doce_ipd <- NULL
+  }
+  doce_ipd
+}
+
 make_doce_surv_fig <- function(fig_path){
   if(!is.na(fig_path)){
     doce_figs <-
