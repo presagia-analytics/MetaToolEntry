@@ -191,8 +191,20 @@ test_that("write_trial - write tiral in to duckdb (abnormal cases)",{
 
   single_trial <- make_trial(input_info,outcome_list,doce_pub,"nct1122")
   expect_silent(write_trial(single_trial, test_db))
-
+  res = dbGetQuery(test_db, "SELECT * FROM survival_curve")
+  expect_equal(nrow(res), 212)
 })
 
+test_that("write_trial - missing input info",{
 
+  ## no surv figure and surv curve
+
+  input_info$Phase <- NULL
+
+  outcome_list <- make_doce_outcome(combined_df[1,],input_info)
+  doce_pub <- make_doce_pub(input_info)
+
+  single_trial <- make_trial(input_info,outcome_list,doce_pub,"nct1122")
+  expect_silent(write_trial(single_trial, test_db))
+})
 
