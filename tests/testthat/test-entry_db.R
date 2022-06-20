@@ -213,3 +213,16 @@ test_that("write_trial - missing input info",{
   expect_silent(write_trial(single_trial, test_db))
 })
 
+
+test_that("write_trial - missing pdf input",{
+  
+  ## no surv figure and surv curve
+  
+  input_info$pdf_input <- NULL
+  
+  outcome_list <- make_doce_outcome(combined_df[1,],input_info)
+  doce_pub <- make_doce_pub(input_info)
+  
+  single_trial <- make_trial(input_info,outcome_list,doce_pub,"nct1122")
+  expect_silent(write_trial(single_trial, test_db))
+})
