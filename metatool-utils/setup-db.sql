@@ -41,7 +41,7 @@ CREATE TABLE survival_outcome(trial_id STRING,
                               hr_95_ci_upper DOUBLE,
                               hr_95_ci_lower DOUBLE);
 
-CREATE TABLE survival_curve(outcome_row_id STRING, time DOUBLE, surv DOUBLE);
+CREATE TABLE survival_curve(outcome_id STRING, time DOUBLE, surv DOUBLE);
 
 CREATE TABLE survival_ipd(outcome_id STRING, time DOUBLE, status DOUBLE);
 

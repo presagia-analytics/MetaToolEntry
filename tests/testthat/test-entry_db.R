@@ -59,7 +59,7 @@ test_that("make_doce_ipd_data - tke ipd data and add to ipd_data object",{
   t1 <- make_doce_ipd_data(combined_df[1,]$`os-ipd`)
   
   expect_equal(class(t1),c("ipd_data", "data.frame"))
-  expect_equal(dim(t1), c(45,5))
+  expect_equal(dim(t1), c(45,2))
   
   expect_error(make_doce_ipd_data(combined_df[1,]$`os-ipd`[[1]]))
   expect_error(make_doce_ipd_data(NA))
@@ -92,7 +92,7 @@ test_that("test survival outcome",{
   tmp <- make_surv_outcome("os",combined_df[1,],input_info)
    
   expect_true("survival_outcome" %in% class(tmp))
-  expect_equal(dim(tmp), c(1,20))
+  expect_equal(dim(tmp), c(1,19))
   expect_equal(class(tmp$survival_curve),"list")
   expect_equal(class(tmp$survival_curve[[1]]),c("survival_curve", "data.frame"))
   expect_equal(class(tmp$survival_figures),"list")

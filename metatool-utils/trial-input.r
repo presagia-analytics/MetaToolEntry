@@ -86,12 +86,9 @@ survival_outcome <- function(x) {
     combine = "and"
   )
   outcome_id <- UUIDgenerate()
-  outcome_row_id <- UUIDgenerate()
-  
   x$outcome_id <- outcome_id
-  x$outcome_row_id <- outcome_row_id
   if(!is.null(x$survival_curve[[1]])){
-    x$survival_curve[[1]]$outcome_row_id <- outcome_row_id
+    x$survival_curve[[1]]$outcome_id <- outcome_id
   }
   
   if(!is.null(x$survival_figures[[1]])){
@@ -340,7 +337,7 @@ write_outcome.survival_outcome <- function(x, con, verbose = FALSE, ...) {
   }
   db_surv_curve <- tbl(con, "survival_curve")
  
-  sync_table(db_surv_curve, surv_curve, by = "outcome_row_id")
+  sync_table(db_surv_curve, surv_curve, by = "outcome_id")
   }
 
   # Get the survival figures and sync with the database.
