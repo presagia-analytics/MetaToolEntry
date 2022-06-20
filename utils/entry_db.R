@@ -70,6 +70,8 @@ make_surv_outcome <- function(outcome_name,combined_df_row,input_info){
   
   surv_fig_list <- make_doce_surv_fig(ttf_table$fig_path) 
   
+  ipd_list <- make_doce_ipd_data(ttf_table$ipd)
+  
   tibble(
     survival_type = ttf_table$outcome_names,           
     time_unit = unit_time,  
@@ -87,7 +89,7 @@ make_surv_outcome <- function(outcome_name,combined_df_row,input_info){
     hr_95_ci_lower = ttf_table$HR.95CIL,
     survival_curve = list(km_data_list),
     survival_figures = list(surv_fig_list),
-    survival_ipd = ttf_table$ipd,
+    survival_ipd = list(ipd_list),
     ipd_type = ttf_table$ipd_type
   ) |>       
     survival_outcome() 
@@ -106,7 +108,8 @@ make_doce_surv_curve <- function(km_dataframe){
 }
 
 make_doce_ipd_data <- function(ipd_dataframe){
-  ipd_data <- ipd_dataframe[[1]]
+
+  ipd_data <- ipd_dataframe[[1]][,c( "time" ,"status" )]
   if(!is.null(ipd_data)){
     doce_ipd <- ipd_data |>  
       ipd_data()

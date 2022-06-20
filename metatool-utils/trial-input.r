@@ -98,6 +98,10 @@ survival_outcome <- function(x) {
     x$survival_figures[[1]]$outcome_id <- outcome_id
   }
   
+  if(!is.null(x$survival_ipd[[1]])){
+    x$survival_ipd[[1]]$outcome_id <- outcome_id
+  }
+  
   x
 }
 
@@ -349,6 +353,18 @@ write_outcome.survival_outcome <- function(x, con, verbose = FALSE, ...) {
   }
   db_surv_figs <- tbl(con, "survival_figures")
   db_surv_figs <- sync_table(db_surv_figs, surv_figs, by = "outcome_id")
+  }
+  
+  # Get the ipd_data and sync with the database.
+  surv_ipd <- x$survival_ipd[[1]]
+  if(!is.null(surv_ipd)){
+    
+    if ( !("survival_ipd" %in% dbListTables(con)) ) {
+      db_copy_to(con, "survival_ipd", as_tibble(surv_ipd[c(),]),
+                 temporary = FALSE)
+    }
+    db_surv_ipds <- tbl(con, "survival_ipd")
+    db_surv_ipds <- sync_table(db_surv_ipds, surv_ipd, by = "outcome_id")
   }
   
   # Remove the list columns and sync with the database.

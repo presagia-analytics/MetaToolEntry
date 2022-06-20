@@ -3,6 +3,7 @@ source(file.path(here::here(), "utils/functions_helper.R"), encoding = 'UTF-8')
 source(file.path(here::here(),"metatool-utils/trial-input.r"), encoding = 'UTF-8')
 source(file.path(here::here(),"metatool-utils/rawchar.r"), encoding = 'UTF-8')
 library(dplyr)
+library(testthat)
 
 combined_df <- readRDS(file.path(here::here(),"/tests_data/combined_df_all.RDS"))
 combined_df_inc <- readRDS(file.path(here::here(),"/tests_data/combined_df_incomplete.RDS"))
@@ -96,6 +97,8 @@ test_that("test survival outcome",{
   expect_equal(class(tmp$survival_curve[[1]]),c("survival_curve", "data.frame"))
   expect_equal(class(tmp$survival_figures),"list")
   expect_equal(class(tmp$survival_figures[[1]]),c("survival_figures", "tbl_df", "tbl" , "data.frame"))
+  expect_equal(class(tmp$survival_ipd),"list")
+  expect_equal(class(tmp$survival_ipd[[1]]),c("ipd_data", "data.frame"))
   
   t2 <- make_surv_outcome("os",combined_df_inc[1,],input_info)
   expect_equal(dim(t2),dim(tmp))
@@ -103,6 +106,8 @@ test_that("test survival outcome",{
   expect_equal(class(t2$survival_curve[[1]]),"NULL")
   expect_equal(class(t2$survival_figures),"list")
   expect_equal(class(t2$survival_figures[[1]]),"NULL")
+  expect_equal(class(t2$survival_ipd),"list")
+  expect_equal(class(t2$survival_ipd[[1]]),"NULL")
 })
 
 test_that("test continous outcome",{

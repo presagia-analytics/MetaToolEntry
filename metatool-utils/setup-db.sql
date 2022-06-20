@@ -43,6 +43,8 @@ CREATE TABLE survival_outcome(trial_id STRING,
 
 CREATE TABLE survival_curve(outcome_row_id STRING, time DOUBLE, surv DOUBLE);
 
+CREATE TABLE survival_ipd(outcome_id STRING, time DOUBLE, status DOUBLE);
+
 CREATE TABLE survival_figures(outcome_id STRING,
                               uploaded STRING, 
                               generated STRING, 
