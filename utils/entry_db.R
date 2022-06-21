@@ -133,6 +133,7 @@ make_doce_surv_fig <- function(fig_path){
 
 make_con_outcome <- function(outcome_name,combined_df_row,input_info){
   con_table <- extract_outcome(outcome_name,combined_df_row)
+  colnames(con_table) <- tolower(colnames(con_table))
   
   assert(
     nrow(con_table) == 1,
