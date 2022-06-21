@@ -32,8 +32,8 @@ shinyInput <- function(FUN, len, id, ...) {
 #   read_only = FALSE
 # )
 
-trail_outcome <- get_trail_outcome(trial_con_db)
-test_input <- left_join(test_input, trail_outcome, by = "nct_id")
+trial_outcome <- get_trial_outcome(trial_con_db)
+test_input <- left_join(test_input, trial_outcome, by = "nct_id")
 test_input$Action <- shinyInput(actionButton, nrow(test_input), 'button_', label = "Add Outcome", onclick = 'Shiny.onInputChange(\"select_button\",  this.id)' )
 colnames(test_input) <- c("NCT","Title","Outcome","Action")
 
