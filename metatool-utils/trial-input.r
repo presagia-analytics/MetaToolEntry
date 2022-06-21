@@ -450,7 +450,7 @@ trial <- function(trial_id, disease, line, phase, outcome, publication,
     outcome = list(outcome),
     nickname = nickname,
     publication = list(publication),
-    last_modified_time <- Sys.time()
+    last_modified_time = Sys.time()
   ) 
   class(ret) <- setdiff(class(ret), "trial")
   class(ret) <- c("trial", class(ret))
