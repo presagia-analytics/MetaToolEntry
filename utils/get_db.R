@@ -30,3 +30,25 @@ get_trial_outcome <- function(trial_con_db){
   colnames(out_db) <- c("nct_id","outcomes")
   out_db
 }
+
+
+get_outcome_df <- function(filter_trail, trial_con_db, outcome_name){
+  
+  if (outcome_name %in% c("os", "pfs")){
+    outcome_type <- "survival"
+  } else if (outcome_name %in% c("RECIST","Resp")){
+    outcome_type <- "categorical"
+  } else if (outcome_name %in% c("con","con2")){
+    outcome_type <- "categorical"
+  } else { stop()}
+  
+  IN <- filter_trail$nct_id
+  
+  sql_rule <- paste0("SELECT * FROM ",outcome_type,"_outcome WHERE outcome_names = '",outcome_name,"'")
+  dbGetQuery(trial_con_db, sql_rule)
+  
+}
+
+
+ttt <- paste0("SELECT * FROM ",outcome_type,"_outcome WHERE outcome_names = '",outcome_name,"', trial_id IN ", paste0("('", paste(target_trail, collapse = "','"),"')"))
+
