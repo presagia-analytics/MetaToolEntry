@@ -15,6 +15,7 @@ source(file.path(here::here(), "module/module_num.R"), encoding = 'UTF-8')
 source(file.path(here::here(), "module/module_cat.R"), encoding = 'UTF-8')
 source(file.path(here::here(), "utils/functions_helper.R"), encoding = 'UTF-8')
 source(file.path(here::here(), "utils/entry_db.R"), encoding = 'UTF-8')
+source(file.path(here::here(), "utils/get_db.R"), encoding = 'UTF-8')
 source(file.path(here::here(), "metatool-utils/trial-input.r"))
 source(file.path(here::here(), "/metatool-utils/rawchar.r"))
 
@@ -26,11 +27,11 @@ shinyInput <- function(FUN, len, id, ...) {
   inputs
 }
 
-# trial_con_db <-   dbConnect(
-#   duckdb::duckdb(),
-#   dbdir = file.path(here::here(), "ctgov-snaps/trial-input_test.duckdb"),
-#   read_only = FALSE
-# )
+trial_con_db <-   dbConnect(
+  duckdb::duckdb(),
+  dbdir = file.path(here::here(), "ctgov-snaps/trial-input_test.duckdb"),
+  read_only = FALSE
+)
 
 trial_outcome <- get_trial_outcome(trial_con_db)
 test_input <- left_join(test_input, trial_outcome, by = "nct_id")
