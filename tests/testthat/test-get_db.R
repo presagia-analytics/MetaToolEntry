@@ -1,26 +1,39 @@
-
-source(file.path(here::here(),"metatool-utils/get_db.R"), encoding = 'UTF-8')
+source(file.path(here::here(),"utils/get_db.R"), encoding = 'UTF-8')
 library(dplyr)
 library(testthat)
-
+library(DBI)
 
 test_db <-   dbConnect(
   duckdb::duckdb(),
-  dbdir = file.path(here::here(), "ctgov-snaps/trial-input_test_readonly.duckdb"),
+  dbdir = file.path(here::here(), "ctgov-snaps/trial-input_test.duckdb"),
   read_only = FALSE
 )
 
-con = dbGetQuery(test_db, "SELECT * FROM continuous_outcome")
-cat = dbGetQuery(test_db, "SELECT * FROM categorical_outcome")
-surv= dbGetQuery(test_db, "SELECT trial_id, survival_type FROM survival_outcome")
-surv_uni <- surv[!duplicated(surv),]
+test_that("get_trail_outcome_in - get trial's outcome list for each type",{
+  t1 <- get_trail_outcome_in(test_db, "continuous")
+  expect_equal(dim(t1),c(1, 2))
+  expect_equal(t1$outcomes, "con")
+  
+  t2 <- get_trail_outcome_in(test_db, "categorical")
+  expect_equal(dim(t2),c(2, 2))
+  expect_equal(t2$outcomes, c("RECIST","RECIST"))
+  
+  t3 <- get_trail_outcome_in(test_db, "survival")
+  expect_equal(dim(t3),c(3, 2))
+  expect_equal(t3$outcomes, c("os","os","os"))
+  
+})
 
 
-dbGetQuery(test_db, "SELECT trial_id, survival_type FROM survival_outcome") %>% 
-  distinct() %>%
-  group_by(trial_id) %>% 
-  mutate(outcomes = paste0(survival_type, collapse = ",")) %>%
-  select(c("trial_id", "outcomes")) %>%
-  distinct()
+test_that("get_trail_outcome - get trial's outcomes",{
+  t1 <- get_trail_outcome(test_db)
+  expect_equal(dim(t1),c(5, 2))
+  expect_equal(t1$outcomes_all, c("con", "RECIST,os","RECIST","os","os"))
+
+})
+
+
+
+
 
 
