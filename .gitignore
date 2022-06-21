@@ -7,3 +7,8 @@ ctgov-snaps/.gitattributes
 ctgov-snaps/ctgov.rds
 ctgov-snaps/trial-input.duckdb.wal
 MetaToolEntry.Rproj
+app/app.R
+ctgov-snaps/trial-input_test.duckdb.wal
+ctgov-snaps/trial-input_test_readonly.duckdb.wal
+ctgov-snaps/trial-input_test.duckdb.wal
+ctgov-snaps/trial-input_test.duckdb.wal
