@@ -113,6 +113,9 @@ test_that("test survival outcome",{
 test_that("test continous outcome",{
   tmp <- make_con_outcome("con",combined_df[1,],input_info)
   expect_true("continuous_outcome" %in% class(tmp))
+  
+  #TODO
+  #con = dbGetQuery(test_db, "SELECT * FROM continuous_outcome")
 })
 
 

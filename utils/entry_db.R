@@ -73,7 +73,7 @@ make_surv_outcome <- function(outcome_name,combined_df_row,input_info){
   ipd_list <- make_doce_ipd_data(ttf_table$ipd)
   
   tibble(
-    survival_type = ttf_table$outcome_names,           
+    outcome_names = ttf_table$outcome_names,           
     time_unit = unit_time,  
     treatment = ttf_table$Treatment,   
     subgroup = ttf_table$Subgroup,

@@ -79,8 +79,8 @@ survival_outcome <- function(x) {
   add_class <- c("survival_outcome", "outcome")
   x <- make_outcome(x, table_names, add_class)
   assert(
-    length(x$survival_type) == 1,
-    x$survival_type %in% c("os", "pfs"),
+    length(x$outcome_names) == 1,
+    x$outcome_names %in% c("os", "pfs"),
     length(x$time_unit) == 1,
     x$time_unit %in% c('month', 'week', 'year', 'day'),
     combine = "and"
@@ -375,7 +375,7 @@ write_outcome.survival_outcome <- function(x, con, verbose = FALSE, ...) {
 
   db_surv_out <- tbl(con, "survival_outcome")
   sync_table(db_surv_out, xs, 
-             by = c("trial_id", "survival_type", "time_unit", 
+             by = c("trial_id", "outcome_names", "time_unit", 
                     "treatment", "subgroup","pathology"))
   x
 }

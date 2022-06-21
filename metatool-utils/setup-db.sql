@@ -25,7 +25,7 @@ CREATE TABLE survival_outcome(trial_id STRING,
                               outcome_id STRING,
                               user_name STRING,
                               group_name STRING,
-                              survival_type surv_type,
+                              outcome_names surv_type,
                               time_unit surv_time_type,
                               treatment STRING,
                               subgroup STRING,
@@ -38,7 +38,9 @@ CREATE TABLE survival_outcome(trial_id STRING,
                               fup_median DOUBLE,
                               hazard_ratio DOUBLE,
                               hr_95_ci_upper DOUBLE,
-                              hr_95_ci_lower DOUBLE);
+                              hr_95_ci_lower DOUBLE,
+                              ipd_type STRING,
+                              last_modified_time DATE);
 
 CREATE TABLE survival_curve(outcome_id STRING, time DOUBLE, surv DOUBLE);
 
@@ -57,7 +59,8 @@ CREATE TABLE continuous_outcome(trial_id STRING,
                                 treatment STRING,
                                 subgroup STRING,
                                 pathology STRING,
-                                val DOUBLE);
+                                val DOUBLE,
+                                last_modified_time DATE);
 
 CREATE TYPE cat_type AS ENUM ('RECIST', 'Resp');
 
@@ -72,5 +75,6 @@ CREATE TABLE categorical_outcome(trial_id STRING,
                                  subgroup STRING,
                                  pathology STRING,
                                  n INTEGER,
-                                 val STRING);
+                                 val STRING,
+                                 last_modified_time DATE);
 
