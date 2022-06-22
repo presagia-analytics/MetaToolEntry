@@ -69,6 +69,5 @@ get_outcome_df <- function(filter_trail, trial_con_db, outcome_name){
 }
 
 
-outcome_df <- get_outcome_df(test_input,trial_con_db, "os")
 
 
