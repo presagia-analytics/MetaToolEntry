@@ -29,7 +29,7 @@ shinyInput <- function(FUN, len, id, ...) {
 
 # trial_con_db <-   dbConnect(
 #   duckdb::duckdb(),
-#   dbdir = file.path(here::here(), "ctgov-snaps/trial-input2.duckdb"),
+#   dbdir = file.path(here::here(), "ctgov-snaps/trial-input3.duckdb"),
 #   read_only = FALSE
 # )
 

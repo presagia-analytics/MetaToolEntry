@@ -12,3 +12,4 @@ ctgov-snaps/trial-input_test.duckdb.wal
 ctgov-snaps/trial-input_test_readonly.duckdb.wal
 ctgov-snaps/trial-input_test.duckdb.wal
 ctgov-snaps/trial-input_test.duckdb.wal
+app/tests/shinytest.R
