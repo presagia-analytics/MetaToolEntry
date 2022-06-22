@@ -43,10 +43,11 @@ get_outcome_df <- function(filter_trail, trial_con_db, outcome_name){
   } else { stop()}
   
   IN <- filter_trail$nct_id
-  
   sql_rule <- paste0("SELECT * FROM ",outcome_type,"_outcome WHERE outcome_names = '",outcome_name,"'AND trial_id IN ", paste0("('", paste(target_trail, collapse = "','"),"')"))
   out_df <-dbGetQuery(trial_con_db, sql_rule)
   out_df
 }
 
 
+## TODO, survival add ipd. 
+## merge trial infomation to outcome database. 
