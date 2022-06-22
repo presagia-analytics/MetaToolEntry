@@ -27,11 +27,11 @@ shinyInput <- function(FUN, len, id, ...) {
   inputs
 }
 
-trial_con_db <-   dbConnect(
-  duckdb::duckdb(),
-  dbdir = file.path(here::here(), "ctgov-snaps/trial-input_test.duckdb"),
-  read_only = FALSE
-)
+# trial_con_db <-   dbConnect(
+#   duckdb::duckdb(),
+#   dbdir = file.path(here::here(), "ctgov-snaps/trial-input2.duckdb"),
+#   read_only = FALSE
+# )
 
 trial_outcome <- get_trial_outcome(trial_con_db)
 test_input <- left_join(test_input, trial_outcome, by = "nct_id")
@@ -155,7 +155,7 @@ server <- function(input, output, session) {
     
     for (row_id in seq(1:nrow(combined_df))){
       doce_outcome_list <- make_doce_outcome(combined_df[row_id,],input_info)
-      single_trial <- make_trial(input_info,doce_outcome_list,pub,trial_value$nct)
+      single_trial <- make_trial(input_info,doce_outcome_list,pub,trimws(trial_value$nct))
       write_trial(single_trial, trial_con_db)
     }
     
