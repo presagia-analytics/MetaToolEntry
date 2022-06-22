@@ -41,8 +41,6 @@ trial_con_db <-   dbConnect(
 )
 
 
-
-
 test_input_org <- readRDS(file.path(here::here(), "tests_data/test_input.RDS"))
 show_col <- c('nct_id', 'official_title')
 test_input <- test_input_org[,show_col]
