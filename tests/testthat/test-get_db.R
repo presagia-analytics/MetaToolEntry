@@ -47,15 +47,23 @@ trial_con_db <-   dbConnect(
   read_only = FALSE
 )
 
-test_input_org <- readRDS("C:/Users/Preadmin/OneDrive - Telperian/Github/ctrialsgovshiny/data/test_input.RDS")
+
+
+test_input_org <- readRDS(file.path(here::here(), "tests_data/test_input.RDS"))
 show_col <- c('nct_id', 'official_title')
 test_input <- test_input_org[,show_col]
 
 
 test_that("get_outcome_df - get trial's outcomes",{
   t1 <- get_outcome_df(test_input,trial_con_db, "os")
-  expect_equal(dim(t1),c(6, 20))
+  expect_equal(dim(t1),c(6, 22))
   expect_true(all(t1$outcome_names == "os"))
+  expect_equal(class(t1$ipd), c("vctrs_list_of", "vctrs_vctr", "list"))
+  expect_equal(class(t1$ipd[[4]]), c("tbl_df","tbl", "data.frame"))
+  
+  t2 <- get_outcome_df(test_input,trial_con_db, "RECIST")
+  expect_equal(dim(t2),c(8, 16))
+  
 })
 
 

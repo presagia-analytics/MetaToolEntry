@@ -42,12 +42,33 @@ get_outcome_df <- function(filter_trail, trial_con_db, outcome_name){
     outcome_type <- "categorical"
   } else { stop()}
   
-  IN <- filter_trail$nct_id
-  sql_rule <- paste0("SELECT * FROM ",outcome_type,"_outcome WHERE outcome_names = '",outcome_name,"'AND trial_id IN ", paste0("('", paste(target_trail, collapse = "','"),"')"))
-  out_df <-dbGetQuery(trial_con_db, sql_rule)
-  out_df
+  target_trail <- filter_trail$nct_id
+  sql_rule_outcome <- paste0("SELECT * FROM ",outcome_type,"_outcome WHERE outcome_names = '",outcome_name,"'AND trial_id IN ", paste0("('", paste(target_trail, collapse = "','"),"')"))
+  out_df <-dbGetQuery(trial_con_db, sql_rule_outcome)
+  
+  sql_rule_info <- paste0("SELECT * FROM trial WHERE trial_id IN ", paste0("('", paste(target_trail, collapse = "','"),"')"))
+  out_info <-dbGetQuery(trial_con_db, sql_rule_info)
+  
+  out_all <- left_join(out_df[- which(colnames(out_df) %in% c("user_name","group_name","last_modified_time"))], out_info[-which(colnames(out_info) %in% c("user_name","group_name","last_modified_time"))], by = "trial_id")
+  
+  
+  if(outcome_type  == "survival"){
+    sql_rule_ipd <- paste0("SELECT * FROM survival_ipd WHERE outcome_id IN ", paste0("('", paste(out_all$outcome_id, collapse = "','"),"')"))
+    out_ipd <- dbGetQuery(trial_con_db, sql_rule_ipd )
+    
+    ipd_list <- out_ipd %>%
+       group_by(outcome_id)%>% 
+       group_split() %>% 
+       setNames(unique(out_ipd$outcome_id))
+    ipd_df <- data.frame(outcome_id =  names(ipd_list))
+    ipd_df$ipd <- ipd_list
+    out_all <- left_join(out_all,ipd_df, by = "outcome_id")
+  } 
+  
+  out_all
 }
 
 
-## TODO, survival add ipd. 
-## merge trial infomation to outcome database. 
+outcome_df <- get_outcome_df(test_input,trial_con_db, "os")
+
+
