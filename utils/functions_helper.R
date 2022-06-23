@@ -310,13 +310,13 @@ add_ipd_risktable <- function(final_data ,risk_table, unit_time){
 
   seq_median_id <- which(sapply(final_data$ipd,is.null))
   final_data$ipd[seq_median_id]  = lapply(seq_median_id, function(x) {
-    get_ipd_median(final_data[x,]$Est.Median, final_data[x,]$No.Event, final_data[x,]$N, arm.id= final_data[x,]$Treatment, subgroup.id = final_data[x,]$Subgroup)
+    get_ipd_median(final_data[x,]$Est.Median, final_data[x,]$No.Event, final_data[x,]$N, arm.id= final_data[x,]$Treatment, subgroup.id = final_data[x,]$Subgroup, Pathology.id = final_data[x,]$Pathology)
   })
   final_data$ipd_type[seq_median_id] <- "median"
   final_data
 }
 
-get_ipd_median <- function(median_surv, num_event, num_patient, arm.id = 1, subgroup.id  = 1, Pathology.id = 1){
+get_ipd_median <- function(median_surv, num_event, num_patient, arm.id = "", subgroup.id  = "", Pathology.id = ""){
   median_surv <- as.numeric(median_surv)
   num_event <- as.numeric(num_event)
   num_patient <- as.numeric(num_patient)
@@ -340,7 +340,7 @@ get_ipd_median <- function(median_surv, num_event, num_patient, arm.id = 1, subg
   }
 }
 
-get_ipd_risktable <- function(risk_time, risk_number, km_data, arm.id = 1, subgroup.id  = 1, Pathology.id= 1){
+get_ipd_risktable <- function(risk_time, risk_number, km_data, arm.id = "", subgroup.id  = "", Pathology.id= ""){
   digizeit <- data.frame(k=1:nrow(km_data),Tk=km_data$time,Sk=km_data$surv)
   pub.risk <- riskdat(risk_time, risk_number,digizeit)
   trial_arm <- guyot_ipd(digizeit,pub.risk,tot.events="NA", arm.id=arm.id, subgroup.id = subgroup.id, Pathology = Pathology.id)

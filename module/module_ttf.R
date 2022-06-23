@@ -242,12 +242,14 @@ server_ttf <- function(id, app_values) {
       })
 
       observeEvent(input$add_ipd,{
+      
         final_data <- isolate(ttf_values[[ns('final_data')]])
         risk_table <- isolate(ttf_values[[ns("risk_table")]])
 
         final_data <- add_ipd_risktable(final_data, risk_table, input$unit_time)
+        final_data <- final_data[which(final_data$Treatment != ""),] 
 
-        ttf_values[[ns('final_data')]] <- make_final_table(final_data, ns)
+        app_values[['all_outcome']] <- make_final_table(final_data, ns)
         ttf_values[[ns('ipd_table')]] <- do.call(rbind,final_data$ipd)
         gargoyle::trigger("make_ipd")
       })
@@ -274,32 +276,32 @@ server_ttf <- function(id, app_values) {
 }
 
 
-library(shiny)
-library(rhandsontable)
-library(ggplot2)
-source(file.path(here::here(), "utils/functions_helper.R"), encoding = 'UTF-8')
-
-options("gargoyle.talkative" = TRUE)
-
-ui <- fluidPage(
- ui_ttf("ttf1"),
- hr(),
- textOutput("text"),
- dataTableOutput('table')
-)
-
-server <- function(input, output) {
- values <- reactiveValues()
- df <- read.csv(file.path(here::here(),"tests_data/FirstDataSource.csv"))
- values[['summary_table']] <- df
- server_ttf("ttf1",values)
- output$text <- renderText({
-   paste0(names(values),sep = "  //")
-   })
- output$table <- renderDataTable(
-   #browser()
-   values[["all_outcome"]]
-   )
-}
-
-shinyApp(ui, server)
+# library(shiny)
+# library(rhandsontable)
+# library(ggplot2)
+# source(file.path(here::here(), "utils/functions_helper.R"), encoding = 'UTF-8')
+# 
+# options("gargoyle.talkative" = TRUE)
+# 
+# ui <- fluidPage(
+#  ui_ttf("ttf1"),
+#  hr(),
+#  textOutput("text"),
+#  dataTableOutput('table')
+# )
+# 
+# server <- function(input, output) {
+#  values <- reactiveValues()
+#  df <- read.csv(file.path(here::here(),"tests_data/FirstDataSource.csv"))
+#  values[['summary_table']] <- df
+#  server_ttf("ttf1",values)
+#  output$text <- renderText({
+#    paste0(names(values),sep = "  //")
+#    })
+#  output$table <- renderDataTable(
+#    #browser()
+#    values[["all_outcome"]]
+#    )
+# }
+# 
+# shinyApp(ui, server)
