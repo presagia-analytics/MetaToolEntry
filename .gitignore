@@ -13,3 +13,12 @@ ctgov-snaps/trial-input_test_readonly.duckdb.wal
 ctgov-snaps/trial-input_test.duckdb.wal
 ctgov-snaps/trial-input_test.duckdb.wal
 app/tests/shinytest.R
+ctgov-snaps/trial-input2.duckdb.wal
+ctgov-snaps/trial-input3.duckdb.wal
+ctgov-snaps/trial-input_test.duckdb.wal
+module/module_ttf/tests/shinytest/ipd_median-expected/001.json
+module/module_ttf/tests/shinytest/ipd_median-expected/001.png
+module/module_ttf/tests/shinytest/ipd_median.R
+module/module_ttf/tests/shinytest/test_numbercohort-expected/001.json
+module/module_ttf/tests/shinytest/test_numbercohort-expected/001.png
+module/module_ttf/tests/shinytest/test_numbercohort.R
