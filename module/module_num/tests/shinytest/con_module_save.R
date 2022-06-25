@@ -1,0 +1,11 @@
+app <- ShinyDriver$new("../../")
+app$snapshotInit("con_module_save")
+
+app$setInputs(`counter1-save_table` = "click")
+app$snapshot()
+app$setInputs(`counter1-n_arms` = 8)
+app$setInputs(`counter1-n_arms` = 7)
+app$setInputs(`counter1-n_arms` = 6)
+app$setInputs(`counter1-n_arms` = 5)
+app$setInputs(`counter1-n_arms` = 4)
+app$snapshot()
