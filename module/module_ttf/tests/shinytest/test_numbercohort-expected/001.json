@@ -1,0 +1,675 @@
+{
+  "input": {
+    "ttf1-add_ipd": 0,
+    "ttf1-excel_input": null,
+    "ttf1-img_input": null,
+    "ttf1-ipd_input": null,
+    "ttf1-n_arms": 2,
+    "ttf1-save_table": 0,
+    "ttf1-ttf_table": {
+      "data": [
+        [
+          1,
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          2,
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ]
+      ],
+      "changes": {
+        "event": "afterChange",
+        "changes": null
+      },
+      "params": {
+        "data": [
+          [
+            1,
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            2,
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ]
+        ],
+        "rClass": "data.frame",
+        "rColClasses": {
+          "ID": "integer",
+          "Treatment": "character",
+          "Subgroup": "character",
+          "Pathology": "character",
+          "N": "character",
+          "No.Event": "character",
+          "Est.Median": "character",
+          "EM.95CIL": "character",
+          "EM.95CIU": "character",
+          "Fup.Median": "character",
+          "HR": "character",
+          "HR.95CIL": "character",
+          "HR.95CIU": "character",
+          "KM.Data": "character",
+          "IPD.Data": "character"
+        },
+        "rColnames": [
+          "ID",
+          "Treatment",
+          "Subgroup",
+          "Pathology",
+          "N",
+          "No.Event",
+          "Est.Median",
+          "EM.95CIL",
+          "EM.95CIU",
+          "Fup.Median",
+          "HR",
+          "HR.95CIL",
+          "HR.95CIU",
+          "KM.Data",
+          "IPD.Data"
+        ],
+        "rColHeaders": [
+          "ID",
+          "Treatment",
+          "Subgroup",
+          "Pathology",
+          "N",
+          "No.Event",
+          "Est.Median",
+          "EM.95CIL",
+          "EM.95CIU",
+          "Fup.Median",
+          "HR",
+          "HR.95CIL",
+          "HR.95CIU",
+          "KM.Data",
+          "IPD.Data"
+        ],
+        "rRowHeaders": [
+          "1",
+          "2"
+        ],
+        "rDataDim": [
+          2,
+          15
+        ],
+        "selectCallback": true,
+        "colHeaders": [
+          "ID",
+          "Treatment",
+          "Subgroup",
+          "Pathology",
+          "N",
+          "No.Event",
+          "Est.Median",
+          "EM.95CIL",
+          "EM.95CIU",
+          "Fup.Median",
+          "HR",
+          "HR.95CIL",
+          "HR.95CIU",
+          "KM.Data",
+          "IPD.Data"
+        ],
+        "rowHeaders": [
+          "1",
+          "2"
+        ],
+        "columns": [
+          {
+            "type": "numeric",
+            "numericFormat": {
+              "pattern": "0"
+            },
+            "default": null,
+            "readOnly": true
+          },
+          {
+            "type": "autocomplete",
+            "default": null,
+            "source": [
+              "",
+              "Chemotherapy",
+              "Docetaxel",
+              "Nivolumab"
+            ],
+            "strict": false
+          },
+          {
+            "type": "autocomplete",
+            "default": null,
+            "source": [
+              "",
+              "non-squamous",
+              "squamous"
+            ],
+            "strict": false
+          },
+          {
+            "type": "autocomplete",
+            "default": null,
+            "strict": false
+          },
+          {
+            "type": "text",
+            "default": null
+          },
+          {
+            "type": "text",
+            "default": null
+          },
+          {
+            "type": "text",
+            "default": null
+          },
+          {
+            "type": "text",
+            "default": null
+          },
+          {
+            "type": "text",
+            "default": null
+          },
+          {
+            "type": "text",
+            "default": null
+          },
+          {
+            "type": "text",
+            "default": null
+          },
+          {
+            "type": "text",
+            "default": null
+          },
+          {
+            "type": "text",
+            "default": null
+          },
+          {
+            "type": "dropdown",
+            "default": null,
+            "source": "",
+            "strict": true
+          },
+          {
+            "type": "dropdown",
+            "default": null,
+            "source": "",
+            "strict": true
+          }
+        ],
+        "width": null,
+        "height": 250,
+        "debug": 0,
+        "search": false,
+        "stretchH": "all",
+        "comments": false,
+        "contextMenu": {
+          "items": {
+            "row_above": [
+
+            ],
+            "row_below": [
+
+            ],
+            "remove_row": [
+
+            ],
+            "hsep3": {
+              "name": "---------",
+              "key": "hsep3"
+            },
+            "undo": [
+
+            ],
+            "redo": [
+
+            ],
+            "hsep4": {
+              "name": "---------",
+              "key": "hsep4"
+            },
+            "alignment": [
+
+            ]
+          }
+        },
+        "rowHeaderWidth": 0,
+        "ishighlight": true,
+        "currentRowClassName": "currentRow",
+        "currentColClassName": "currentCol"
+      }
+    },
+    "ttf1-unit_time": "month"
+  },
+  "output": {
+    "table": null,
+    "text": "summary_table  //",
+    "ttf1-excfig": {
+      "src": "[image data sha1: 14a093a5e04ef75cf68c1b1bab378da0f45d0b66]",
+      "width": 301,
+      "height": 400,
+      "alt": "Plot object",
+      "coordmap": {
+        "panels": [
+          {
+            "domain": {
+              "left": -0.04,
+              "right": 1.04,
+              "bottom": -0.04,
+              "top": 1.04
+            },
+            "range": {
+              "left": 0,
+              "right": 301,
+              "bottom": 399,
+              "top": -1
+            },
+            "log": {
+              "x": null,
+              "y": null
+            },
+            "mapping": {
+
+            }
+          }
+        ],
+        "dims": {
+          "width": 301,
+          "height": 400
+        }
+      }
+    },
+    "ttf1-ipd_table": {
+      "x": null,
+      "evals": [
+
+      ],
+      "jsHooks": null,
+      "deps": [
+
+      ]
+    },
+    "ttf1-ipdfig": {
+      "src": "[image data sha1: 14a093a5e04ef75cf68c1b1bab378da0f45d0b66]",
+      "width": 301,
+      "height": 400,
+      "alt": "Plot object",
+      "coordmap": {
+        "panels": [
+          {
+            "domain": {
+              "left": -0.04,
+              "right": 1.04,
+              "bottom": -0.04,
+              "top": 1.04
+            },
+            "range": {
+              "left": 0,
+              "right": 301,
+              "bottom": 399,
+              "top": -1
+            },
+            "log": {
+              "x": null,
+              "y": null
+            },
+            "mapping": {
+
+            }
+          }
+        ],
+        "dims": {
+          "width": 301,
+          "height": 400
+        }
+      }
+    },
+    "ttf1-pdffig": null,
+    "ttf1-risk_table": {
+      "message": "",
+      "call": "NULL",
+      "type": [
+        "shiny.silent.error",
+        "validation"
+      ]
+    },
+    "ttf1-ttf_table": {
+      "x": {
+        "data": [
+          {
+            "ID": 1,
+            "Treatment": "",
+            "Subgroup": "",
+            "Pathology": "",
+            "N": "",
+            "No.Event": "",
+            "Est.Median": "",
+            "EM.95CIL": "",
+            "EM.95CIU": "",
+            "Fup.Median": "",
+            "HR": "",
+            "HR.95CIL": "",
+            "HR.95CIU": "",
+            "KM.Data": "",
+            "IPD.Data": ""
+          },
+          {
+            "ID": 2,
+            "Treatment": "",
+            "Subgroup": "",
+            "Pathology": "",
+            "N": "",
+            "No.Event": "",
+            "Est.Median": "",
+            "EM.95CIL": "",
+            "EM.95CIU": "",
+            "Fup.Median": "",
+            "HR": "",
+            "HR.95CIL": "",
+            "HR.95CIU": "",
+            "KM.Data": "",
+            "IPD.Data": ""
+          }
+        ],
+        "rClass": "data.frame",
+        "rColClasses": {
+          "ID": "integer",
+          "Treatment": "character",
+          "Subgroup": "character",
+          "Pathology": "character",
+          "N": "character",
+          "No.Event": "character",
+          "Est.Median": "character",
+          "EM.95CIL": "character",
+          "EM.95CIU": "character",
+          "Fup.Median": "character",
+          "HR": "character",
+          "HR.95CIL": "character",
+          "HR.95CIU": "character",
+          "KM.Data": "character",
+          "IPD.Data": "character"
+        },
+        "rColnames": [
+          "ID",
+          "Treatment",
+          "Subgroup",
+          "Pathology",
+          "N",
+          "No.Event",
+          "Est.Median",
+          "EM.95CIL",
+          "EM.95CIU",
+          "Fup.Median",
+          "HR",
+          "HR.95CIL",
+          "HR.95CIU",
+          "KM.Data",
+          "IPD.Data"
+        ],
+        "rColHeaders": [
+          "ID",
+          "Treatment",
+          "Subgroup",
+          "Pathology",
+          "N",
+          "No.Event",
+          "Est.Median",
+          "EM.95CIL",
+          "EM.95CIU",
+          "Fup.Median",
+          "HR",
+          "HR.95CIL",
+          "HR.95CIU",
+          "KM.Data",
+          "IPD.Data"
+        ],
+        "rRowHeaders": [
+          "1",
+          "2"
+        ],
+        "rDataDim": [
+          2,
+          15
+        ],
+        "selectCallback": true,
+        "colHeaders": [
+          "ID",
+          "Treatment",
+          "Subgroup",
+          "Pathology",
+          "N",
+          "No.Event",
+          "Est.Median",
+          "EM.95CIL",
+          "EM.95CIU",
+          "Fup.Median",
+          "HR",
+          "HR.95CIL",
+          "HR.95CIU",
+          "KM.Data",
+          "IPD.Data"
+        ],
+        "rowHeaders": [
+          "1",
+          "2"
+        ],
+        "columns": [
+          {
+            "type": "numeric",
+            "numericFormat": {
+              "pattern": "0"
+            },
+            "renderer": "customRenderer",
+            "default": null,
+            "readOnly": true
+          },
+          {
+            "type": "autocomplete",
+            "renderer": "customRenderer",
+            "default": null,
+            "source": [
+              "",
+              "Chemotherapy",
+              "Docetaxel",
+              "Nivolumab"
+            ],
+            "strict": false
+          },
+          {
+            "type": "autocomplete",
+            "renderer": "customRenderer",
+            "default": null,
+            "source": [
+              "",
+              "non-squamous",
+              "squamous"
+            ],
+            "strict": false
+          },
+          {
+            "type": "autocomplete",
+            "renderer": "customRenderer",
+            "default": null,
+            "strict": false
+          },
+          {
+            "type": "text",
+            "renderer": "customRenderer",
+            "default": null
+          },
+          {
+            "type": "text",
+            "renderer": "customRenderer",
+            "default": null
+          },
+          {
+            "type": "text",
+            "renderer": "customRenderer",
+            "default": null
+          },
+          {
+            "type": "text",
+            "renderer": "customRenderer",
+            "default": null
+          },
+          {
+            "type": "text",
+            "renderer": "customRenderer",
+            "default": null
+          },
+          {
+            "type": "text",
+            "renderer": "customRenderer",
+            "default": null
+          },
+          {
+            "type": "text",
+            "renderer": "customRenderer",
+            "default": null
+          },
+          {
+            "type": "text",
+            "renderer": "customRenderer",
+            "default": null
+          },
+          {
+            "type": "text",
+            "renderer": "customRenderer",
+            "default": null
+          },
+          {
+            "type": "dropdown",
+            "renderer": "customRenderer",
+            "default": null,
+            "source": "",
+            "strict": true
+          },
+          {
+            "type": "dropdown",
+            "renderer": "customRenderer",
+            "default": null,
+            "source": "",
+            "strict": true
+          }
+        ],
+        "width": null,
+        "height": 250,
+        "debug": 0,
+        "search": false,
+        "stretchH": "all",
+        "comments": false,
+        "contextMenu": {
+          "items": {
+            "row_above": [
+
+            ],
+            "row_below": [
+
+            ],
+            "remove_row": [
+
+            ],
+            "hsep3": {
+              "name": "---------"
+            },
+            "undo": [
+
+            ],
+            "redo": [
+
+            ],
+            "hsep4": {
+              "name": "---------"
+            },
+            "alignment": [
+
+            ]
+          }
+        },
+        "rowHeaderWidth": 0,
+        "ishighlight": true,
+        "currentRowClassName": "currentRow",
+        "currentColClassName": "currentCol"
+      },
+      "evals": [
+        "columns.0.renderer",
+        "columns.1.renderer",
+        "columns.2.renderer",
+        "columns.3.renderer",
+        "columns.4.renderer",
+        "columns.5.renderer",
+        "columns.6.renderer",
+        "columns.7.renderer",
+        "columns.8.renderer",
+        "columns.9.renderer",
+        "columns.10.renderer",
+        "columns.11.renderer",
+        "columns.12.renderer",
+        "columns.13.renderer",
+        "columns.14.renderer"
+      ],
+      "jsHooks": [
+
+      ],
+      "deps": [
+
+      ]
+    }
+  },
+  "export": {
+
+  }
+}
