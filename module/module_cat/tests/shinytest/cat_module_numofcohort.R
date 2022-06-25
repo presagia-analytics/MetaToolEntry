@@ -1,0 +1,13 @@
+app <- ShinyDriver$new("../../")
+app$snapshotInit("cat_module_numofcohort")
+
+app$setInputs(`counter1-n_arms` = 8)
+app$setInputs(`counter1-n_arms` = 9)
+app$setInputs(`counter1-n_arms` = 8)
+app$setInputs(`counter1-n_arms` = 7)
+app$setInputs(`counter1-n_arms` = 6)
+app$setInputs(`counter1-n_arms` = 0)
+app$snapshot()
+app$setInputs(`counter1-n_arms` = 1)
+app$setInputs(`counter1-n_arms` = 3)
+app$snapshot()

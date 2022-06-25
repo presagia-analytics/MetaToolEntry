@@ -1,0 +1,519 @@
+{
+  "input": {
+    "counter1-cat_level_name": "CR;PR;",
+    "counter1-cat_table": {
+      "data": [
+        [
+          1,
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          2,
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          3,
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          4,
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          5,
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          6,
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          7,
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ]
+      ],
+      "changes": {
+        "event": "afterChange",
+        "changes": null
+      },
+      "params": {
+        "data": [
+          [
+            1,
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            2,
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            3,
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            4,
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            5,
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            6,
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            7,
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ]
+        ],
+        "rClass": "data.frame",
+        "rColClasses": {
+          "ID": "integer",
+          "Treatment": "character",
+          "Subgroup": "character",
+          "Pathology": "character",
+          "N": "character",
+          "CR": "character",
+          "PR": "character"
+        },
+        "rColnames": [
+          "ID",
+          "Treatment",
+          "Subgroup",
+          "Pathology",
+          "N",
+          "CR",
+          "PR"
+        ],
+        "rColHeaders": [
+          "ID",
+          "Treatment",
+          "Subgroup",
+          "Pathology",
+          "N",
+          "CR",
+          "PR"
+        ],
+        "rRowHeaders": null,
+        "rDataDim": [
+          7,
+          7
+        ],
+        "selectCallback": true,
+        "colHeaders": [
+          "ID",
+          "Treatment",
+          "Subgroup",
+          "Pathology",
+          "N",
+          "CR",
+          "PR"
+        ],
+        "rowHeaders": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7"
+        ],
+        "columns": [
+          {
+            "type": "numeric",
+            "numericFormat": {
+              "pattern": "0"
+            },
+            "default": null,
+            "readOnly": true
+          },
+          {
+            "type": "autocomplete",
+            "default": null,
+            "source": [
+              "",
+              "Chemotherapy",
+              "Docetaxel",
+              "Nivolumab"
+            ],
+            "strict": false
+          },
+          {
+            "type": "autocomplete",
+            "default": null,
+            "source": [
+              "",
+              "non-squamous",
+              "squamous"
+            ],
+            "strict": false
+          },
+          {
+            "type": "text",
+            "default": null
+          },
+          {
+            "type": "text",
+            "default": null
+          },
+          {
+            "type": "text",
+            "default": null
+          },
+          {
+            "type": "text",
+            "default": null
+          }
+        ],
+        "width": null,
+        "height": 200,
+        "debug": 0,
+        "search": false,
+        "stretchH": "all",
+        "comments": false,
+        "contextMenu": {
+          "items": {
+            "row_above": [
+
+            ],
+            "row_below": [
+
+            ],
+            "remove_row": [
+
+            ],
+            "hsep3": {
+              "name": "---------",
+              "key": "hsep3"
+            },
+            "undo": [
+
+            ],
+            "redo": [
+
+            ],
+            "hsep4": {
+              "name": "---------",
+              "key": "hsep4"
+            },
+            "alignment": [
+
+            ]
+          }
+        },
+        "rowHeaderWidth": 0,
+        "ishighlight": true,
+        "currentRowClassName": "currentRow",
+        "currentColClassName": "currentCol"
+      }
+    },
+    "counter1-n_arms": 7,
+    "counter1-save_table": 0
+  },
+  "output": {
+    "counter1-cat_table": {
+      "x": {
+        "data": [
+          {
+            "ID": 1,
+            "Treatment": "",
+            "Subgroup": "",
+            "Pathology": "",
+            "N": "",
+            "CR": "",
+            "PR": ""
+          },
+          {
+            "ID": 2,
+            "Treatment": "",
+            "Subgroup": "",
+            "Pathology": "",
+            "N": "",
+            "CR": "",
+            "PR": ""
+          },
+          {
+            "ID": 3,
+            "Treatment": "",
+            "Subgroup": "",
+            "Pathology": "",
+            "N": "",
+            "CR": "",
+            "PR": ""
+          },
+          {
+            "ID": 4,
+            "Treatment": "",
+            "Subgroup": "",
+            "Pathology": "",
+            "N": "",
+            "CR": "",
+            "PR": ""
+          },
+          {
+            "ID": 5,
+            "Treatment": "",
+            "Subgroup": "",
+            "Pathology": "",
+            "N": "",
+            "CR": "",
+            "PR": ""
+          },
+          {
+            "ID": 6,
+            "Treatment": "",
+            "Subgroup": "",
+            "Pathology": "",
+            "N": "",
+            "CR": "",
+            "PR": ""
+          },
+          {
+            "ID": 7,
+            "Treatment": "",
+            "Subgroup": "",
+            "Pathology": "",
+            "N": "",
+            "CR": "",
+            "PR": ""
+          }
+        ],
+        "rClass": "data.frame",
+        "rColClasses": {
+          "ID": "integer",
+          "Treatment": "character",
+          "Subgroup": "character",
+          "Pathology": "character",
+          "N": "character",
+          "CR": "character",
+          "PR": "character"
+        },
+        "rColnames": [
+          "ID",
+          "Treatment",
+          "Subgroup",
+          "Pathology",
+          "N",
+          "CR",
+          "PR"
+        ],
+        "rColHeaders": [
+          "ID",
+          "Treatment",
+          "Subgroup",
+          "Pathology",
+          "N",
+          "CR",
+          "PR"
+        ],
+        "rRowHeaders": null,
+        "rDataDim": [
+          7,
+          7
+        ],
+        "selectCallback": true,
+        "colHeaders": [
+          "ID",
+          "Treatment",
+          "Subgroup",
+          "Pathology",
+          "N",
+          "CR",
+          "PR"
+        ],
+        "rowHeaders": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7"
+        ],
+        "columns": [
+          {
+            "type": "numeric",
+            "numericFormat": {
+              "pattern": "0"
+            },
+            "renderer": "customRenderer",
+            "default": null,
+            "readOnly": true
+          },
+          {
+            "type": "autocomplete",
+            "renderer": "customRenderer",
+            "default": null,
+            "source": [
+              "",
+              "Chemotherapy",
+              "Docetaxel",
+              "Nivolumab"
+            ],
+            "strict": false
+          },
+          {
+            "type": "autocomplete",
+            "renderer": "customRenderer",
+            "default": null,
+            "source": [
+              "",
+              "non-squamous",
+              "squamous"
+            ],
+            "strict": false
+          },
+          {
+            "type": "text",
+            "renderer": "customRenderer",
+            "default": null
+          },
+          {
+            "type": "text",
+            "renderer": "customRenderer",
+            "default": null
+          },
+          {
+            "type": "text",
+            "renderer": "customRenderer",
+            "default": null
+          },
+          {
+            "type": "text",
+            "renderer": "customRenderer",
+            "default": null
+          }
+        ],
+        "width": null,
+        "height": 200,
+        "debug": 0,
+        "search": false,
+        "stretchH": "all",
+        "comments": false,
+        "contextMenu": {
+          "items": {
+            "row_above": [
+
+            ],
+            "row_below": [
+
+            ],
+            "remove_row": [
+
+            ],
+            "hsep3": {
+              "name": "---------"
+            },
+            "undo": [
+
+            ],
+            "redo": [
+
+            ],
+            "hsep4": {
+              "name": "---------"
+            },
+            "alignment": [
+
+            ]
+          }
+        },
+        "rowHeaderWidth": 0,
+        "ishighlight": true,
+        "currentRowClassName": "currentRow",
+        "currentColClassName": "currentCol"
+      },
+      "evals": [
+        "columns.0.renderer",
+        "columns.1.renderer",
+        "columns.2.renderer",
+        "columns.3.renderer",
+        "columns.4.renderer",
+        "columns.5.renderer",
+        "columns.6.renderer"
+      ],
+      "jsHooks": [
+
+      ],
+      "deps": [
+
+      ]
+    },
+    "table": null,
+    "text": "summary_table  // all_outcome  //"
+  },
+  "export": {
+
+  }
+}
