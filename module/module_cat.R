@@ -1,13 +1,13 @@
 
 
-ui_cat <- function(id) {
+ui_cat <- function(id, level_value) {
   ns <- NS(id)
   tagList(
     fluidRow(
       column(6,
              numericInput(ns("n_arms"), label = h5(strong("Number of Cohorts:")), 7, min = 1, max = 100)),
       column(6,
-             textInput(ns("cat_level_name"), label = h5(strong("Level of the Outcome")), value = "CR;PR;SD;PD"))),
+             textInput(ns("cat_level_name"), label = h5(strong("Level of the Outcome")), value = level_value ))), #"CR;PR;SD;PD"
     rHandsontableOutput(ns("cat_table")),
     br(),
     fluidRow(column(12,verticalLayout(actionButton(ns("save_table"), "Save")))),
