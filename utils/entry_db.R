@@ -179,16 +179,17 @@ make_RECIST_outcome <- function(combined_df_row,input_info){
 
 make_resp_outcome <- function(combined_df_row,input_info){
   cat_table <- extract_outcome("Resp",combined_df_row)
-  
   assert(
     nrow(cat_table) == 1,
     combine = "and"
   )
   
   
-  if(cat_table$Response == ""){cat_table$Response = 0}
+  if(cat_table$Response == ""){cat_table$Response = 0}else{
+    cat_table$Response <- as.numeric(cat_table$Response)
+  }
   
-  responses <- c(rep("Response",cat_table$Response),rep("No Response",(cat_table$N - cat_table$Response)))
+  responses <- c(rep("Response",cat_table$Response),rep("No Response",(as.numeric(cat_table$N) - cat_table$Response)))
   
   doce_cat_outcome <- 
     tibble(
