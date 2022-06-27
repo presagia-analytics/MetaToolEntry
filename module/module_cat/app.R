@@ -4,7 +4,7 @@ library(rhandsontable)
 source(file.path(here::here(), "utils/functions_helper.R"), encoding = 'UTF-8')
 source(file.path(here::here(), "module/module_cat.R"), encoding = 'UTF-8')
 ui <- fluidPage(
-  ui_cat ("counter1"),
+  ui_cat ("counter1", "a;b;c"),
   hr(),
     textOutput("text"),
     dataTableOutput('table')

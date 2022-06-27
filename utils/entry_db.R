@@ -158,11 +158,11 @@ make_RECIST_outcome <- function(combined_df_row,input_info){
   if(cat_table$SD == ""){cat_table$SD = 0}
   if(cat_table$PD == ""){cat_table$PD = 0}
   
-  responces <- c(rep("CR",cat_table$CR),rep("PR",cat_table$PR),rep("SD",cat_table$SD),rep("PD",cat_table$PD))
+  responses <- c(rep("CR",cat_table$CR),rep("PR",cat_table$PR),rep("SD",cat_table$SD),rep("PD",cat_table$PD))
   
   doce_cat_outcome <- 
     tibble(
-      val = factor(responces, levels = c("PD", "SD", "PR", "CR"),
+      val = factor(responses, levels = c("PD", "SD", "PR", "CR"),
                    ordered = TRUE)
     )
   
@@ -186,13 +186,13 @@ make_resp_outcome <- function(combined_df_row,input_info){
   )
   
   
-  if(cat_table$Responce == ""){cat_table$Responce = 0}
+  if(cat_table$Response == ""){cat_table$Response = 0}
   
-  responces <- c(rep("Responce",cat_table$Responce),rep("No Responce",(cat_table$N - cat_table$Responce)))
+  responses <- c(rep("Response",cat_table$Response),rep("No Response",(cat_table$N - cat_table$Response)))
   
   doce_cat_outcome <- 
     tibble(
-      val = factor(responces, levels = c("Responce", "No Responce"),
+      val = factor(responses, levels = c("Response", "No Response"),
                    ordered = FALSE)
     )
   

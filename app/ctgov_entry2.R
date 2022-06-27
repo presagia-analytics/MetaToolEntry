@@ -86,10 +86,13 @@ ui <- navbarPage('MetaTool Entry',
                                            ui_ttf("pfs")
                                   ),
                                   tabPanel("RECIST",
-                                           ui_cat ("RECIST")
+                                           ui_cat("RECIST", "CR;PR;SD;PD")  
+                                  ),
+                                  tabPanel("Responses",
+                                           ui_cat("Resp", "Response;OR;OR95CI")  
                                   ),
                                   tabPanel("con",
-                                           ui_num ("con")
+                                           ui_num("con")
                                   )
                                 )
                               )
@@ -134,6 +137,7 @@ server <- function(input, output, session) {
   server_ttf(id = "os", entry_value)
   server_ttf(id = "pfs",entry_value)
   server_cat("RECIST",entry_value)
+  server_cat("Resp",entry_value)
   server_num("con",entry_value)
   
   output$sel_nct <- renderText({
