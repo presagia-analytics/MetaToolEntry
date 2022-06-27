@@ -147,7 +147,6 @@ server <- function(input, output, session) {
   
   #### Save and back to first Tab
   observeEvent(input$jumpToP1, {
-   # browser()
     combined_df <- isolate(entry_value[["all_outcome"]])
     input_info <- reactiveValuesToList(input)
     

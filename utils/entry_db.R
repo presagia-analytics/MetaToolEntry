@@ -145,12 +145,18 @@ make_con_outcome <- function(outcome_name,combined_df_row,input_info){
 }
 
 make_RECIST_outcome <- function(combined_df_row,input_info){
+
   cat_table <- extract_outcome("RECIST",combined_df_row)
   
   assert(
     nrow(cat_table) == 1,
     combine = "and"
   )
+  
+  if(cat_table$CR == ""){cat_table$CR = 0}
+  if(cat_table$PR == ""){cat_table$PR = 0}
+  if(cat_table$SD == ""){cat_table$SD = 0}
+  if(cat_table$PD == ""){cat_table$PD = 0}
   
   responces <- c(rep("CR",cat_table$CR),rep("PR",cat_table$PR),rep("SD",cat_table$SD),rep("PD",cat_table$PD))
   
@@ -178,6 +184,9 @@ make_resp_outcome <- function(combined_df_row,input_info){
     nrow(cat_table) == 1,
     combine = "and"
   )
+  
+  
+  if(cat_table$Responce == ""){cat_table$Responce = 0}
   
   responces <- c(rep("Responce",cat_table$Responce),rep("No Responce",(cat_table$N - cat_table$Responce)))
   
